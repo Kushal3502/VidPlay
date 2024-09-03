@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
 import chalk from "chalk";
+import mongoose from "mongoose";
 import { DB_NAME } from "../constants.js";
 
 const connectDB = async () => {
@@ -9,11 +9,11 @@ const connectDB = async () => {
     );
     console.log(
       chalk.bgBlue.bold(
-        `\nMongoDB connected!!! DB host: ${connectionInstance.connection.host}`
+        `MongoDB connected !!! DB host :: ${connectionInstance.connection.host}`
       )
     );
   } catch (error) {
-    console.log(chalk.bgRed.bold("ERROR: ", error));
+    console.log(chalk.bgRed.bold("MongoDB connection FAILED :: ", error));
     process.exit(1);
   }
 };
