@@ -15,7 +15,7 @@ connectDB()
       console.log(chalk.bgRed.bold("ERROR :: ", error))
     );
     app.listen(port, () => {
-      console.log(chalk.bgBlue.bold(`Server is running on PORT :: ${port}`));
+      console.log(chalk.bgBlue.bold(`🫦  Server is running on PORT :: ${port}`));
     });
   })
   .catch((error) =>
