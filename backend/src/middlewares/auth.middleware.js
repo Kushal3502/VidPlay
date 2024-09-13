@@ -10,10 +10,14 @@ const validateJWT = asyncHandler(async (req, res, next) => {
       (await req.cookies?.accessToken) ||
       req.header("Authorization")?.replace("Bearer ", "");
 
+    // console.log(token);
+
     if (!token) throw new ApiError(401, "Unauthorized request");
 
     // verify the token
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    // console.log(decodedToken);
 
     // find the user
     const user = await User.findById(decodedToken?._id).select(
