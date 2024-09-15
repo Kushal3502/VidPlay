@@ -5,7 +5,6 @@ import uploadOnCloudinary from "../utils/cloudinary.js";
 import ApiResponse from "../utils/apiResponse.js";
 import fs from "fs";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 
 const generateTokens = async (userId) => {
   try {
