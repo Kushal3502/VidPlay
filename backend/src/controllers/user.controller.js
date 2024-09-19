@@ -1,10 +1,14 @@
 import { ApiError } from "../utils/apiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
-import uploadOnCloudinary from "../utils/cloudinary.js";
+import {
+  uploadOnCloudinary,
+  deleteFromCloudinary,
+} from "../utils/cloudinary.js";
 import ApiResponse from "../utils/apiResponse.js";
 import fs from "fs";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const generateTokens = async (userId) => {
   try {
@@ -151,7 +155,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: { refreshToken: undefined },
+      $unset: { refreshToken: 1 },
     },
     { new: true }
   );
@@ -170,25 +174,27 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   // retrieve the refresh token
-  const refreshToken = req.cookie.refreshToken || req.body.refreshToken;
+  const currRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
-  if (!refreshToken) throw new ApiError(401, "Unauthorized request!!!");
+  console.log(req.cookies);
+  if (!currRefreshToken) throw new ApiError(401, "Unauthorized request!!!");
 
   try {
     // verify the token
     const decodedToken = jwt.verify(
-      refreshToken,
+      currRefreshToken,
       process.env.REFRESH_TOKEN_SECRET
     );
 
     // get the user
     const user = await User.findById(decodedToken?._id);
-
+    // console.log(user);
     if (!user) throw new ApiError(401, "Unauthorized refresh token!!!");
 
     // generate new token
-    const { newAccessToken, newRefreshToken } = await generateTokens(user._id);
+    const { accessToken, refreshToken } = await generateTokens(user._id);
 
+    console.log(accessToken, refreshToken);
     // reset cookies
     const options = {
       httpOnly: true,
@@ -197,14 +203,14 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     return res
       .status(200)
-      .cookie("accessToken", newAccessToken, options)
-      .cookie("refreshToken", newRefreshToken, options)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
       .json(
         new ApiResponse(
           200,
           {
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
+            accessToken,
+            refreshToken,
           },
           "Tokens refreshed"
         )
@@ -216,8 +222,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 const updatePassword = asyncHandler(async (req, res) => {
   // get old and new password
-  const { password, newPassword } = req.user;
+  const { password, newPassword } = req.body;
 
+  console.log(password, newPassword);
   // find the user
   const user = await User.findById(req.user?._id);
 
@@ -245,7 +252,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   // get updated details
   const { fullname, email } = req.body;
 
-  if (!fullname || !email) throw new ApiError(400, "All fields are required");
+  if (!fullname) throw new ApiError(400, "All fields are required");
 
   // find the user and returns the updated user details
   const updatedUserDetails = await User.findByIdAndUpdate(
@@ -271,7 +278,14 @@ const updateAvatar = asyncHandler(async (req, res) => {
 
   if (!avatar.url) throw new ApiError(400, "Upload failed");
 
-  // todo : delete old image
+  // delete old image
+  const userDetails = await User.findById(req.user?._id);
+  // extract public_id
+  const parts = userDetails.avatar.split("/");
+  const publicId = parts[parts.length - 1].split(".")[0];
+
+  // delete from cloudinary
+  await deleteFromCloudinary(publicId);
 
   // update user
   const updatedUser = await User.findByIdAndUpdate(
@@ -282,10 +296,12 @@ const updateAvatar = asyncHandler(async (req, res) => {
     { new: true }
   ).select("-password");
 
+    console.log(updatedUser);
+
   // return
   return res
     .status(200)
-    .json(new ApiError(200, updatedUser, "Avatar updated successfully."));
+    .json(new ApiResponse(200, updatedUser, "Avatar updated successfully."));
 });
 
 const updateCoverImage = asyncHandler(async (req, res) => {
@@ -300,6 +316,13 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   if (!coverImage.url) throw new ApiError(400, "Upload failed");
 
   // todo : delete old image
+  const userDetails = await User.findById(req.user?._id);
+  // extract public_id
+  const parts = userDetails.coverImage.split("/");
+  const publicId = parts[parts.length - 1].split(".")[0];
+
+  // delete from cloudinary
+  await deleteFromCloudinary(publicId);
 
   // update user
   const updatedUser = await User.findByIdAndUpdate(
@@ -313,7 +336,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   // return
   return res
     .status(200)
-    .json(new ApiError(200, updatedUser, "Cover image updated successfully."));
+    .json(new ApiResponse(200, updatedUser, "Cover image updated successfully."));
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
@@ -390,9 +413,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     // finds the user
     {
       $match: {
-        _id: {
-          $toObjectId: req.user._id,
-        },
+        _id: new mongoose.Types.ObjectId(req.user._id),
       },
     },
     // joins watch history with video schema
