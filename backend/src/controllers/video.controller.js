@@ -61,15 +61,52 @@ const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const video = await Video.findById(videoId);
 
+  if (!video) throw new ApiError(404, "Video not found");
+
   return res.status(200).json(new ApiResponse(200, video, "Video fetched..."));
 });
 
 // update video details like title, description, thumbnail
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  const { title, description } = req.body;
 
-  const updatedDetails = await Video.findByIdAndUpdate(videoId, { $set: {} });
+  const video = await Video.findById(videoId);
+
+  if (!video) throw new ApiError(404, "Video not found!!!");
+
+  const { title, description } = req.body;
+  const thumbnailLocalPath = req.file?.path;
+
+  let newThumbnail;
+
+  // if new thumbnail uploaded
+  if (thumbnailLocalPath) {
+    newThumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+
+    if (!newThumbnail) throw new ApiError(400, "Upload failed!!!");
+
+    // delete old image
+    const parts = video.thumbnail.split("/");
+    const thumbnailId = parts[parts.length - 1].split(".")[0];
+
+    await deleteImageFromCloudinary(thumbnailId);
+  }
+  // update database
+  const updatedVideoDetails = await Video.findByIdAndUpdate(
+    videoId,
+    {
+      $set: {
+        title,
+        description,
+        thumbnail: newThumbnail?.url || video.thumbnail,
+      },
+    },
+    { new: true }
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedVideoDetails, "Video details updated"));
 });
 
 // delete video
@@ -96,6 +133,16 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+
+  const video = await Video.findById(videoId);
+
+  if (!video) throw new ApiError(404, "Video not found");
+
+  video.isPublished = !video.isPublished;
+
+  await video.save();
+
+  return res.status(200).json(new ApiResponse(200, video, "Ok"));
 });
 
 export {
