@@ -3,7 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import {
   uploadOnCloudinary,
-  deleteFromCloudinary,
+  deleteImageFromCloudinary,
 } from "../utils/cloudinary.js";
 import ApiResponse from "../utils/apiResponse.js";
 import fs from "fs";
@@ -176,7 +176,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   // retrieve the refresh token
   const currRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
-  console.log(req.cookies);
+  // console.log(req.cookies);
   if (!currRefreshToken) throw new ApiError(401, "Unauthorized request!!!");
 
   try {
@@ -194,7 +194,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     // generate new token
     const { accessToken, refreshToken } = await generateTokens(user._id);
 
-    console.log(accessToken, refreshToken);
+    // console.log(accessToken, refreshToken);
     // reset cookies
     const options = {
       httpOnly: true,
@@ -285,7 +285,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
   const publicId = parts[parts.length - 1].split(".")[0];
 
   // delete from cloudinary
-  await deleteFromCloudinary(publicId);
+  await deleteImageFromCloudinary(publicId);
 
   // update user
   const updatedUser = await User.findByIdAndUpdate(
@@ -322,7 +322,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   const publicId = parts[parts.length - 1].split(".")[0];
 
   // delete from cloudinary
-  await deleteFromCloudinary(publicId);
+  await deleteImageFromCloudinary(publicId);
 
   // update user
   const updatedUser = await User.findByIdAndUpdate(

@@ -31,11 +31,12 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-const deleteFromCloudinary = async (publicId) => {
+const deleteImageFromCloudinary = async (publicId) => {
   try {
     const result = await cloudinary.uploader
       .destroy(publicId)
       .catch((error) => console.log("Image deletion failed : ", error));
+
     console.log("Delete : ", result);
     return result;
   } catch (error) {
@@ -43,4 +44,36 @@ const deleteFromCloudinary = async (publicId) => {
   }
 };
 
-export { uploadOnCloudinary, deleteFromCloudinary };
+const deleteVideoFromCloudinary = async (publicId) => {
+  try {
+    const result = await cloudinary.uploader
+      .destroy(publicId, { resource_type: "video" })
+      .catch((error) => console.log("Image deletion failed : ", error));
+
+    console.log("Delete : ", result);
+    return result;
+  } catch (error) {
+    console.error("Error deleting image:", error);
+  }
+};
+
+const searchInCloudinary = async (videoId) => {
+  try {
+    const result = await cloudinary.search
+      .expression(`public_id:${videoId}`)
+      .execute()
+      .catch((error) => console.log("Something went wrong : ", error));
+
+    console.log("Search Result:", result.resources);
+    return result;
+  } catch (error) {
+    console.error("Error searching for image:", error);
+  }
+};
+
+export {
+  uploadOnCloudinary,
+  deleteImageFromCloudinary,
+  deleteVideoFromCloudinary,
+  searchInCloudinary,
+};
