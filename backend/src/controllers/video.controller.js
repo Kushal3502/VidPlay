@@ -10,9 +10,61 @@ import {
   deleteVideoFromCloudinary,
 } from "../utils/cloudinary.js";
 
+// get all videos based on query, sort, pagination
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+
+  const videos = await Video.aggregate([
+    {
+      $match: {
+        $or: [
+          {
+            title: {
+              $regex: query || "",
+              $options: "i",
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "createdBy",
+        pipeline: [
+          {
+            $project: {
+              fullname: 1,
+              username: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        createdBy: {
+          $first: "$createdBy",
+        },
+      },
+    },
+    {
+      $sort: {
+        [sortBy]: sortType == "asc" ? 1 : -1,
+      },
+    },
+    {
+      $skip: (parseInt(page) - 1) * parseInt(limit),
+    },
+    {
+      $limit: parseInt(limit),
+    },
+  ]);
+
+  return res.status(200).json(new ApiResponse(200, videos, "Results"));
 });
 
 // get video, upload to cloudinary, create video
@@ -41,7 +93,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
   const newVideo = await Video.create({
     videoFile: videoFile.url,
     thumbnail: thumbnail.url,
-    owner,
+    owner: req.user?._id,
     title,
     description,
     duration: videoFile.duration,
@@ -91,6 +143,7 @@ const updateVideo = asyncHandler(async (req, res) => {
 
     await deleteImageFromCloudinary(thumbnailId);
   }
+
   // update database
   const updatedVideoDetails = await Video.findByIdAndUpdate(
     videoId,
@@ -131,6 +184,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "Video deleted..."));
 });
 
+// toggle publish state
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
 
