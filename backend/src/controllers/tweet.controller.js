@@ -4,7 +4,10 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { deleteImageFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteImageFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 
 // create tweet
 const createTweet = asyncHandler(async (req, res) => {
@@ -117,8 +120,24 @@ const updateTweet = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedTweetDetails, "Tweet updated"));
 });
 
+// delete tweet
 const deleteTweet = asyncHandler(async (req, res) => {
-  //TODO: delete tweet
+  const { tweetId } = req.params;
+
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) throw new ApiError(404, "Tweet not found!!!");
+
+  // extract image_id
+  const tweet_parts = tweet.tweetImage.split("/");
+  const tweetImageId = tweet_parts[tweet_parts.length - 1].split(".")[0];
+
+  // delete from cloudinary
+  await deleteImageFromCloudinary(tweetImageId);
+
+  await Tweet.findByIdAndDelete(tweetId);
+
+  return res.status(200).json(new ApiResponse(200, {}, "Tweet deleted..."));
 });
 
 export { createTweet, getUserTweets, updateTweet, deleteTweet };
