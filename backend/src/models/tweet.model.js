@@ -10,6 +10,9 @@ const tweetSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    tweetImage: {
+      type: String,
+    },
   },
   {
     timestamps: true,
