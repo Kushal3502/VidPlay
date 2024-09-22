@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteImageFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 // create tweet
 const createTweet = asyncHandler(async (req, res) => {
@@ -66,13 +66,55 @@ const getUserTweets = asyncHandler(async (req, res) => {
     },
   ]);
 
+  if (userTweets && userTweets.length == 0)
+    throw new ApiError(404, "No tweets found!!!");
+
   return res
     .status(200)
     .json(new ApiResponse(200, userTweets, "Tweets fetched successfully..."));
 });
 
+// update tweet
 const updateTweet = asyncHandler(async (req, res) => {
-  //TODO: update tweet
+  const { tweetId } = req.params;
+
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) throw new ApiError(404, "Tweet not found!!!");
+
+  const { content } = req.body;
+
+  const tweetImageLocalPath = req.file?.path;
+
+  let newTweetImage;
+
+  if (tweetImageLocalPath) {
+    newTweetImage = await uploadOnCloudinary(tweetImageLocalPath);
+
+    if (!newTweetImage) throw new ApiError(400, "Upload failed!!!");
+
+    // delete old image
+    const parts = tweet.tweetImage.split("/");
+    const tweetImageId = parts[parts.length - 1].split(".")[0];
+
+    await deleteImageFromCloudinary(tweetImageId);
+  }
+
+  // update database
+  const updatedTweetDetails = await Tweet.findByIdAndUpdate(
+    tweetId,
+    {
+      $set: {
+        content,
+        tweetImage: newTweetImage?.url || tweet.tweetImage,
+      },
+    },
+    { new: true }
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedTweetDetails, "Tweet updated"));
 });
 
 const deleteTweet = asyncHandler(async (req, res) => {

@@ -13,6 +13,9 @@ router.use(validateJWT); // Apply verifyJWT middleware to all routes in this fil
 
 router.route("/").post(upload.single("tweetImage"), createTweet);
 router.route("/user/:userId").get(getUserTweets);
-router.route("/:tweetId").patch(updateTweet).delete(deleteTweet);
+router
+  .route("/:tweetId")
+  .patch(upload.single("tweetImage"), updateTweet)
+  .delete(deleteTweet);
 
 export default router;
