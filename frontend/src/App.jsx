@@ -1,12 +1,7 @@
-import React from "react";
-import { Button } from "./components/ui/button";
+import React, { useState } from "react";
 
 function App() {
-  return (
-    <div>
-      <Button>Hello</Button>
-    </div>
-  );
+  return <div>App</div>;
 }
 
 export default App;
