@@ -40,6 +40,21 @@ const getVideoComments = asyncHandler(async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "comment",
+        as: "likes",
+      },
+    },
+    {
+      $addFields: {
+        likes: {
+          $size: "$likes",
+        },
+      },
+    },
+    {
       $skip: (parseInt(page) - 1) * parseInt(limit),
     },
     {
