@@ -7,7 +7,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/v1/videos", { credentials: 'include' })
+      .get("http://127.0.0.1:8000/api/v1/videos", { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         setVideos(res.data.data);
