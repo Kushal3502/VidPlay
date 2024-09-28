@@ -32,7 +32,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         from: "users",
         localField: "owner",
         foreignField: "_id",
-        as: "createdBy",
+        as: "owner",
         pipeline: [
           {
             $project: {
@@ -45,11 +45,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
       },
     },
     {
-      $addFields: {
-        createdBy: {
-          $first: "$createdBy",
-        },
-      },
+      $unwind: "$owner",
     },
     {
       $sort: {
@@ -119,6 +115,26 @@ const getVideoById = asyncHandler(async (req, res) => {
     },
     {
       $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              username: 1,
+              fullname: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$owner",
+    },
+    {
+      $lookup: {
         from: "likes",
         localField: "_id",
         foreignField: "video",
@@ -147,7 +163,9 @@ const getVideoById = asyncHandler(async (req, res) => {
 
   if (!video) throw new ApiError(404, "Video not found");
 
-  return res.status(200).json(new ApiResponse(200, video, "Video fetched..."));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, video[0], "Video fetched..."));
 });
 
 // update video details like title, description, thumbnail

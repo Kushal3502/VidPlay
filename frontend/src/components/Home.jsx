@@ -1,28 +1,40 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { VideoCard } from ".";
 
 function Home() {
   const [videos, setVideos] = useState([]);
 
+  const fetchVideos = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/v1/videos", {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      setVideos(response.data.data);
+    } catch (error) {
+      console.log("Video fetch error :: ", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/v1/videos", { withCredentials: true })
-      .then((res) => {
-        console.log(res.data);
-        setVideos(res.data.data);
-      })
-      .catch((err) => console.error(err));
+    fetchVideos();
   }, []);
 
   return (
-    <div>
+    <div className=" p-4 sm:p-6 lg:p-8">
       {videos && (
-        <ul>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {videos.map((video) => (
-            <li>{video.title}</li>
+            <div
+              key={video._id}
+              className=" rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+            >
+              <VideoCard data={video} />
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

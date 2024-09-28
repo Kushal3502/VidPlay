@@ -8,8 +8,8 @@ function App() {
     navigate("/");
   }, []);
   return (
-    <div>
-      <div>Navbar</div>
+    <div className=" h-full">
+      <div><h1 className=" font-mono">VidPlay</h1></div>
       <Outlet />
     </div>
   );

@@ -5,7 +5,14 @@ import "./index.css";
 import { Provider } from "react-redux";
 import { store } from "./store/store.js";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { AuthLayout, Home, Login, Register } from "./pages/index.js";
+import {
+  AuthLayout,
+  Channel,
+  Home,
+  Login,
+  Register,
+  Video,
+} from "./pages/index.js";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +22,14 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "video/:videoId",
+        element: <Video />,
+      },
+      {
+        path: "users/channel/:username",
+        element: <Channel />,
       },
     ],
   },
@@ -35,9 +50,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );
