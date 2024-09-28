@@ -5,6 +5,8 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/slices/authSlice";
 
 function Login() {
   const {
@@ -13,7 +15,8 @@ function Login() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  
   const handleLogin = async (data) => {
     console.log(data);
 
@@ -25,11 +28,13 @@ function Login() {
         "Content-Type": "application/json",
       },
       data,
+      withCredentials: true,
     };
 
     try {
       const response = await axios.request(config);
       console.log("Response:", response.data);
+      dispatch(login(response.data.data));
       navigate("/");
     } catch (error) {
       console.error("Error:", error);

@@ -7,7 +7,7 @@ const validateJWT = asyncHandler(async (req, res, next) => {
   try {
     // get the user tokens --> cookies for web and header for mobile devices
     const token =
-      (await req.cookies?.accessToken) ||
+      req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
     // console.log(token);
