@@ -5,6 +5,21 @@ import { VideoCard } from ".";
 
 function Home() {
   const [videos, setVideos] = useState([]);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  const getCurrentUser = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/v1/users/user",
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.data) setIsAuthorized(true);
+    } catch (error) {
+      console.log("Unauthorized :: ", error);
+    }
+  };
 
   const fetchVideos = async () => {
     try {
@@ -19,8 +34,14 @@ function Home() {
   };
 
   useEffect(() => {
-    fetchVideos();
+    getCurrentUser();
   }, []);
+
+  useEffect(() => {
+    if (isAuthorized) {
+      fetchVideos();
+    }
+  }, [isAuthorized]);
 
   return (
     <div className=" p-4 sm:p-6 lg:p-8">

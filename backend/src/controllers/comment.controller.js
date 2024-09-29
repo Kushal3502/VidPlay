@@ -40,6 +40,9 @@ const getVideoComments = asyncHandler(async (req, res) => {
       },
     },
     {
+      $unwind: "$owner",
+    },
+    {
       $lookup: {
         from: "likes",
         localField: "_id",

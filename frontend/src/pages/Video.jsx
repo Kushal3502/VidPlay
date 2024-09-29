@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import ReactPlayer from "react-player";
 import { Link, useParams } from "react-router-dom";
 
 function Video() {
@@ -38,9 +39,24 @@ function Video() {
     }
   };
 
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/v1/comments/${video?._id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data.data);
+    } catch (error) {
+      console.log("Comment fetch error :: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchVideoDetails();
     getCurrentUser();
+    fetchComments();
   }, [videoId]);
 
   useEffect(() => {
@@ -53,7 +69,14 @@ function Video() {
     <div className=" lg:p-20 sm:p-5 p-3">
       <div className="sm:w-full max-w-6xl">
         <div className="w-full sm:max-w-72 md:max-w-md lg:max-w-6xl rounded-lg overflow-hidden">
-          <img src={video?.thumbnail} />
+          {/* <img src={video?.thumbnail} /> */}
+          <ReactPlayer
+            url={video?.videoFile}
+            controls={true}
+            playing={true}
+            width="100%"
+            height="100%"
+          />
         </div>
         <div>
           <div>
