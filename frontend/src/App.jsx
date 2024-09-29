@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { Navbar } from "./components";
 
 function App() {
   const navigate = useNavigate();
@@ -7,9 +8,10 @@ function App() {
   useEffect(() => {
     navigate("/");
   }, []);
+  
   return (
     <div className=" h-full">
-      <div><h1 className=" font-mono">VidPlay</h1></div>
+      <Navbar />
       <Outlet />
     </div>
   );

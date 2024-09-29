@@ -43,15 +43,19 @@ function Register() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="p-8 shadow-md rounded-xl max-w-screen-md w-full border-2 border-white">
-        <h2 className="text-4xl font-semibold font-mono mb-8">
-          Welcome to VidPlay✨
+      <div className="lg:p-8 md:p-6 p-4 shadow-md rounded-xl max-w-screen-md w-full border-2 border-white">
+        <h2 className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold font-mono mb-4 md:mb-8 flex flex-col sm:flex-row items-center justify-start">
+          Welcome to
+          <img
+            src="../public/Logo-removebg-preview.png"
+            className="w-32 sm:w-40 md:w-48 lg:w-48 mt-4 sm:mt-0 sm:ml-4"
+            alt="Logo"
+          />
         </h2>
         <form
           onSubmit={handleSubmit(handleRegister)}
-          className="grid grid-cols-2 gap-5"
+          className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5"
         >
-          {/* Fullname */}
           <div className="grid gap-1.5">
             <Label htmlFor="fullname" className="">
               Fullname
@@ -64,7 +68,6 @@ function Register() {
               {...register("fullname")}
             />
           </div>
-          {/* Username */}
           <div className="grid gap-1.5">
             <Label htmlFor="username" className="">
               Username
@@ -89,8 +92,6 @@ function Register() {
               </span>
             )}
           </div>
-
-          {/* Email */}
           <div className="grid gap-1.5">
             <Label htmlFor="email" className="">
               Email
@@ -113,8 +114,6 @@ function Register() {
               </span>
             )}
           </div>
-
-          {/* Password */}
           <div className="grid gap-1.5">
             <Label htmlFor="password" className="">
               Password
@@ -139,8 +138,6 @@ function Register() {
               </span>
             )}
           </div>
-
-          {/* Avatar */}
           <div className="grid gap-1.5">
             <Label htmlFor="avatar" className="">
               Avatar
@@ -152,8 +149,6 @@ function Register() {
               className="cursor-pointer"
             />
           </div>
-
-          {/* Cover Image */}
           <div className="grid gap-1.5">
             <Label htmlFor="coverImage" className="">
               Cover Image
@@ -165,8 +160,6 @@ function Register() {
               className="cursor-pointer"
             />
           </div>
-
-          {/* Register Button */}
           {isSubmitting ? (
             <Button
               disabled
