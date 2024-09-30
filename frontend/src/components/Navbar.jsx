@@ -73,7 +73,8 @@ function Navbar() {
           Search
         </Button>
       </form>
-      <div className="mt-4 lg:mt-0">
+      <div className="mt-4 lg:mt-0 flex justify-center items-center gap-4">
+        <p className=" lg:text-lg">Welcome, { userData.fullname}</p>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>

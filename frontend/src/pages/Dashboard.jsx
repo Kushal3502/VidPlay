@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 function Dashboard() {
   const { userData } = useSelector((state) => state.auth);
   const [videos, setVideos] = useState([]);
+  const [stats, setStats] = useState();
 
   console.log(userData);
 
@@ -23,12 +24,26 @@ function Dashboard() {
     }
   };
 
+  const fetchStats = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/v1/dashboard/stats",
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      setStats(response.data.data);
+    } catch (error) {
+      console.log("Video fetch error :: ", error);
+    }
+  };
+
   useEffect(() => {
+    fetchStats();
     fetchVideos();
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <div className="w-full">
         <img
           className="w-full h-60 object-cover"
@@ -48,20 +63,20 @@ function Dashboard() {
         </div>
       </div>
       <Separator className="my-4" />
-      <div className="w-full flex justify-evenly h-32 items-center space-x-4 lg:text-3xl text-sm ">
+      <div className="w-full flex justify-evenly h-28 items-center space-x-4 lg:text-3xl text-sm ">
         <div>
-          <h2>Total videos</h2>
-          <p className="text-center">{videos && videos.length}</p>
+          <h2 className="mb-2">Total videos</h2>
+          <p className="text-center">{stats?.totalVideos}</p>
         </div>
         <Separator orientation="vertical" />
         <div>
-          <h2>Total subscribers</h2>
-          <p className="text-center">{videos && videos.length}</p>
+          <h2 className="mb-2">Total subscribers</h2>
+          <p className="text-center">{stats?.totalSubscribers}</p>
         </div>
         <Separator orientation="vertical" />
         <div>
-          <h2>Total views</h2>
-          <p className="text-center">{videos && videos.length}</p>
+          <h2 className="mb-2">Total views</h2>
+          <p className="text-center">{stats?.totalViews}</p>
         </div>
       </div>
       <Separator className="my-4" />
