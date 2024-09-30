@@ -8,6 +8,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import {
   AuthLayout,
   Channel,
+  Dashboard,
   Home,
   Login,
   Register,
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "users/channel/:username",
         element: <Channel />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
       },
     ],
   },

@@ -13,10 +13,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, User } from "lucide-react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/store/slices/authSlice";
 
 function Navbar() {
   const navigate = useNavigate();
+  const { userData } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
+  console.log(userData);
   const handleLogout = async () => {
     try {
       const response = await axios.post(
@@ -25,9 +30,23 @@ function Navbar() {
         { withCredentials: true }
       );
       console.log(response);
+      dispatch(logout());
       navigate("/auth/login");
     } catch (error) {
       console.log("Logout error :: ", error);
+    }
+  };
+
+  const handleProfile = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/v1/dashboard/stats",
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      navigate("/dashboard");
+    } catch (error) {
+      console.log("Profile error :: ", error);
     }
   };
 
@@ -58,7 +77,11 @@ function Navbar() {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage
+                src={userData?.avatar || "https://github.com/shadcn.png"}
+                alt="@shadcn"
+                className="object-cover"
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
@@ -67,7 +90,7 @@ function Navbar() {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <span onClick={handleProfile}>Profile</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <LogOut className="mr-2 h-4 w-4" />

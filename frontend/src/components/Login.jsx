@@ -34,7 +34,7 @@ function Login() {
     try {
       const response = await axios.request(config);
       console.log("Response:", response.data);
-      dispatch(login(response.data.data));
+      dispatch(login(response.data.data.user));
       navigate("/");
     } catch (error) {
       console.error("Error:", error);

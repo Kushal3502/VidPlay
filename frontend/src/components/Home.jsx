@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { VideoCard } from ".";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [videos, setVideos] = useState([]);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
 
   const getCurrentUser = async () => {
     try {
@@ -15,8 +16,9 @@ function Home() {
           withCredentials: true,
         }
       );
-      if (response.data) setIsAuthorized(true);
+      if (response.status == 200) setIsAuthorized(true);
     } catch (error) {
+      navigate("/auth/login");
       console.log("Unauthorized :: ", error);
     }
   };
