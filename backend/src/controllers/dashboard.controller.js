@@ -54,8 +54,8 @@ const getChannelStats = asyncHandler(async (req, res) => {
     new ApiResponse(200, {
       totalVideos,
       totalSubscribers,
-      totalLikes: totalLikesViews[0].totalLikes,
-      totalViews: totalLikesViews[0].totalViews,
+      totalLikes: totalLikesViews[0]?.totalLikes || 0,
+      totalViews: totalLikesViews[0]?.totalViews || 0,
     })
   );
 });

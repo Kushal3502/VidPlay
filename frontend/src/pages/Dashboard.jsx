@@ -43,10 +43,10 @@ function Dashboard() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto p-2">
       <div className="w-full">
         <img
-          className="w-full h-60 object-cover"
+          className="w-full lg:h-60 h-32 object-cover"
           src={userData.coverImage}
           alt="CoverImage"
         />
@@ -63,7 +63,7 @@ function Dashboard() {
         </div>
       </div>
       <Separator className="my-4" />
-      <div className="w-full flex justify-evenly h-28 items-center space-x-4 lg:text-3xl text-sm ">
+      <div className="w-full flex justify-evenly lg:h-24 h-12 items-center space-x-4 lg:text-3xl ">
         <div>
           <h2 className="mb-2">Total videos</h2>
           <p className="text-center">{stats?.totalVideos}</p>
@@ -81,7 +81,7 @@ function Dashboard() {
       </div>
       <Separator className="my-4" />
       <div className=" p-4 sm:p-6 lg:p-4">
-        <h2 className="lg:text-3xl text-sm mb-4">Popular videos</h2>
+        <h2 className="lg:text-3xl mb-4">Popular videos</h2>
         {videos && (
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {videos.map((video) => (

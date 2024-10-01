@@ -9,7 +9,7 @@ function VideoCard({ data }) {
 
   return (
     <div>
-      <Link to={`video/${data._id}`}>
+      <Link to={`/video/${data._id}`}>
         <img src={data.thumbnail} className=" rounded-lg mb-2" />
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center lg:gap-4 gap-2">

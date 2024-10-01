@@ -55,7 +55,7 @@ function Navbar() {
       <Link to={"/"}>
         <img
           src="/Logo-removebg-preview.png"
-          className="w-24 sm:w-28 md:w-36 lg:w-40 mt-4 sm:mt-0"
+          className="w-24 sm:w-28 md:w-36 lg:w-36 mt-4 sm:mt-0"
           alt="Logo"
         />
       </Link>
@@ -74,7 +74,7 @@ function Navbar() {
         </Button>
       </form>
       <div className="mt-4 lg:mt-0 flex justify-center items-center gap-4">
-        <p className=" lg:text-lg">Welcome, { userData.fullname}</p>
+        <p className=" hidden lg:block lg:text-lg">Welcome, { userData?.fullname}</p>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>
@@ -86,7 +86,7 @@ function Navbar() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="m-4 ">
+          <DropdownMenuContent className="m-4 bg-[#18181B] text-white">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
