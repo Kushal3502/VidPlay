@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { AtSign, LogOut, User, Video } from "lucide-react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/authSlice";
@@ -96,20 +96,30 @@ function Navbar() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
-            <DropdownMenuLabel className="text-lg">
-              My Account
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-lg">
-              <User className="mr-2 h-4 w-4" />
-              <span onClick={() => navigate("/dashboard")}>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600 text-lg">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span onClick={handleLogout}>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+          {userData && (
+            <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
+              <DropdownMenuLabel className="text-lg">
+                My Account
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-lg">
+                <User className="mr-2 h-4 w-4" />
+                <span onClick={() => navigate("/dashboard")}>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-lg">
+                <Video className="mr-2 h-4 w-4" />
+                <span onClick={() => navigate("/upload/video")}>New video</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-lg">
+                <AtSign className="mr-2 h-4 w-4" />
+                <span onClick={() => navigate("/upload/tweet")}>New post</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600 text-lg">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span onClick={handleLogout}>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          )}
         </DropdownMenu>
       </div>
     </div>

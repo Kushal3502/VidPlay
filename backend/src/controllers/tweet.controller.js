@@ -67,6 +67,9 @@ const getUserTweets = asyncHandler(async (req, res) => {
         ],
       },
     },
+    {
+      $unwind: "$tweetAuthor",
+    },
   ]);
 
   if (userTweets && userTweets.length == 0)

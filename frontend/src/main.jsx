@@ -10,9 +10,12 @@ import {
   Channel,
   Dashboard,
   Home,
+  Layout,
   Login,
   Register,
+  TweetUpload,
   Video,
+  VideoUpload,
 } from "./pages/index.js";
 
 const router = createBrowserRouter([
@@ -35,6 +38,20 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "upload/",
+        element: <Layout />,
+        children: [
+          {
+            path: "video",
+            element: <VideoUpload />,
+          },
+          {
+            path: "tweet",
+            element: <TweetUpload />,
+          },
+        ],
       },
     ],
   },
