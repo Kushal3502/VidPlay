@@ -82,7 +82,7 @@ function Dashboard() {
       <Separator className="my-4" />
       <div className=" p-4 sm:p-6 lg:p-4">
         <h2 className="lg:text-3xl mb-4">Popular videos</h2>
-        {videos && (
+        {videos && videos.length > 0 ? (
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {videos.map((video) => (
               <div
@@ -93,6 +93,8 @@ function Dashboard() {
               </div>
             ))}
           </div>
+        ) : (
+          <p>No videos available </p>
         )}
       </div>
     </div>

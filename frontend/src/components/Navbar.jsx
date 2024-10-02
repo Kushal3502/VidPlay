@@ -37,18 +37,18 @@ function Navbar() {
     }
   };
 
-  const handleProfile = async () => {
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/v1/dashboard/stats",
-        { withCredentials: true }
-      );
-      console.log(response.data);
-      navigate("/dashboard");
-    } catch (error) {
-      console.log("Profile error :: ", error);
-    }
-  };
+  // const handleProfile = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://127.0.0.1:8000/api/v1/dashboard/stats",
+  //       { withCredentials: true }
+  //     );
+  //     console.log(response.data);
+  //     navigate("/dashboard");
+  //   } catch (error) {
+  //     console.log("Profile error :: ", error);
+  //   }
+  // };
 
   return (
     <div className="flex flex-wrap justify-between items-center lg:py-4 lg:px-12 md:p-3 p-2 space-x-4">
@@ -74,7 +74,17 @@ function Navbar() {
         </Button>
       </form>
       <div className="mt-4 lg:mt-0 flex justify-center items-center gap-4">
-        <p className=" hidden lg:block lg:text-lg">Welcome, { userData?.fullname}</p>
+        {userData ? (
+          <p className=" hidden lg:block lg:text-lg">
+            Welcome, {userData?.fullname.split(" ")[0]}
+          </p>
+        ) : (
+          <Link to={"/auth/login"}>
+            <Button className="w-full lg:w-auto bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base">
+              Login
+            </Button>
+          </Link>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>
@@ -86,14 +96,16 @@ function Navbar() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="m-4 bg-[#18181B] text-white">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
+            <DropdownMenuLabel className="text-lg">
+              My Account
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="text-lg">
               <User className="mr-2 h-4 w-4" />
-              <span onClick={handleProfile}>Profile</span>
+              <span onClick={() => navigate("/dashboard")}>Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600 text-lg">
               <LogOut className="mr-2 h-4 w-4" />
               <span onClick={handleLogout}>Log out</span>
             </DropdownMenuItem>

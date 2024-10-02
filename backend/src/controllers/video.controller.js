@@ -24,6 +24,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
               $options: "i",
             },
           },
+          {
+            owner: new mongoose.Types.ObjectId(userId),
+          },
         ],
       },
     },

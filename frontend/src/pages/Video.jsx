@@ -1,4 +1,4 @@
-import { Comment } from "@/components";
+import { CommentCard } from "@/components";
 import { AnimatedSubscribeButton } from "@/components/ui/animated-subscribe-button";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -95,7 +95,7 @@ function Video() {
                 >
                   <img
                     src={video?.owner?.avatar}
-                    className=" lg:w-12 lg:h-12 sm:h-10 sm:w-10 w-8 h-8 rounded-full"
+                    className=" lg:w-12 lg:h-12 sm:h-10 sm:w-10 w-8 h-8 rounded-full object-cover"
                   />
                   <p className="lg:text-xl ">{video?.owner?.username}</p>
                 </Link>
@@ -119,7 +119,7 @@ function Video() {
                 />
                 {/* </Button> */}
                 {isOwner && (
-                  <Link to={`/users/channel/${user.username}`}>
+                  <Link to={"/dashboard"}>
                     <Button className=" bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base">
                       View Channel
                     </Button>
@@ -127,8 +127,18 @@ function Video() {
                 )}
               </div>
               <div className=" pr-3 flex justify-center items-center gap-5">
-                <p>{video?.likes} likes</p>
-                <p>Save</p>
+                <div>
+                  <img src="https://img.icons8.com/?size=100&id=4y6r43dyjbzw&format=png&color=FFFFFF" />
+                  <p>{video?.views} views</p>
+                </div>
+                <div>
+                  <img src="https://img.icons8.com/?size=100&id=24816&format=png&color=FFFFFF" />
+                  <p>{video?.likes} likes</p>
+                </div>
+                <div>
+                  <img src="https://img.icons8.com/?size=100&id=25157&format=png&color=FFFFFF" />
+                  <p>Save</p>
+                </div>
               </div>
             </div>
           </div>
@@ -148,7 +158,7 @@ function Video() {
             <ul>
               {comments.map((comment) => (
                 <div className="mb-6" key={comment?._id}>
-                  <Comment comment={comment} />
+                  <CommentCard comment={comment} />
                 </div>
               ))}
             </ul>
