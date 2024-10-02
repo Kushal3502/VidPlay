@@ -1,4 +1,4 @@
-import { VideoCard } from "@/components";
+import { Tweets, VideoCard } from "@/components";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -98,22 +98,29 @@ function Channel() {
         </div>
       </div>
       <Separator className="my-4" />
-      <div className=" p-4 sm:p-6 lg:p-4">
-        <h2 className="lg:text-3xl mb-4">Popular videos</h2>
-        {videos && (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {videos.map((video) => (
-              <div
-                key={video._id}
-                className=" rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"
-              >
-                <VideoCard data={video} />
+      {channel && (
+        <div>
+          <div className=" p-4 sm:p-6 lg:p-4">
+            <h2 className="lg:text-3xl mb-4">Popular videos</h2>
+            {videos && (
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {videos.map((video) => (
+                  <div
+                    key={video._id}
+                    className=" rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer "
+                  >
+                    <VideoCard data={video} />
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
-      </div>
-      <Separator className="my-4" />
+          <Separator className="my-4" />
+          <div>
+            <Tweets userId={channel._id} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
