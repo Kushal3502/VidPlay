@@ -6,6 +6,7 @@ import Comment from "./Comment";
 import CommentCard from "./CommentCard";
 import Navbar from "./Navbar";
 import Tweets from "./tweet/Tweets";
+import Videos from "./video/Videos";
 
 export {
   Login,
@@ -16,4 +17,5 @@ export {
   CommentCard,
   Navbar,
   Tweets,
+  Videos
 };

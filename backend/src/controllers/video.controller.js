@@ -19,13 +19,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
       $match: {
         $or: [
           {
+            owner: new mongoose.Types.ObjectId(userId),
+          },
+          {
             title: {
               $regex: query || "",
               $options: "i",
             },
-          },
-          {
-            owner: new mongoose.Types.ObjectId(userId),
           },
         ],
       },

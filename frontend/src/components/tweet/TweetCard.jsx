@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function TweetCard({ tweet }) {
   return (
-    <div className="">
+    <div className="border border-zinc-600 rounded-lg p-2">
       <Link>
         <div className=" flex items-center gap-2 mb-2">
           <img
