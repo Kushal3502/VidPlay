@@ -14,21 +14,19 @@ import {
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
 
+  const matchConditions = {};
+
+  if (userId) {
+    matchConditions.owner = new mongoose.Types.ObjectId(userId);
+  }
+
+  if (query) {
+    matchConditions.title = { $regex: query, $options: "i" };
+  }
+
   const videos = await Video.aggregate([
     {
-      $match: {
-        $or: [
-          {
-            owner: new mongoose.Types.ObjectId(userId),
-          },
-          {
-            title: {
-              $regex: query || "",
-              $options: "i",
-            },
-          },
-        ],
-      },
+      $match: matchConditions,
     },
     {
       $lookup: {
