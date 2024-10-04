@@ -36,6 +36,70 @@ const createTweet = asyncHandler(async (req, res) => {
   return res.status(201).json(new ApiResponse(200, newTweet));
 });
 
+// get tweet by id
+const getTweetById = asyncHandler(async (req, res) => {
+  const { tweetId } = req.params;
+  const tweet = await Tweet.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(tweetId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              username: 1,
+              fullname: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$owner",
+    },
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "tweet",
+        as: "likes",
+      },
+    },
+    {
+      $lookup: {
+        from: "comments",
+        localField: "_id",
+        foreignField: "tweet",
+        as: "comments",
+      },
+    },
+    {
+      $addFields: {
+        likes: {
+          $size: "$likes",
+        },
+        comments: {
+          $size: "$comments",
+        },
+      },
+    },
+  ]);
+
+  if (!tweet) throw new ApiError(404, "Tweet not found");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweet[0], "Tweet fetched..."));
+});
+
 // get user tweets
 const getUserTweets = asyncHandler(async (req, res) => {
   const { userId } = req.params;
@@ -143,4 +207,4 @@ const deleteTweet = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "Tweet deleted..."));
 });
 
-export { createTweet, getUserTweets, updateTweet, deleteTweet };
+export { createTweet, getTweetById, getUserTweets, updateTweet, deleteTweet };

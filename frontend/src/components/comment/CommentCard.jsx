@@ -5,7 +5,7 @@ function CommentCard({ comment }) {
     <div className=" flex justify-start item-center gap-3 border-b-[1px] border-b-gray-400 px-4 py-2">
       <img
         src={comment.owner.avatar}
-        className=" lg:w-10 lg:h-10 sm:h-8 sm:w-8 w-6 h-6 rounded-full "
+        className=" lg:w-10 lg:h-10 sm:h-8 sm:w-8 w-6 h-6 rounded-full object-cover"
       />
       <div className="flex flex-col items-start">
         <h2 className="lg:text-base sm:text-xl text-sm">

@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -14,6 +13,7 @@ import {
   Login,
   Register,
   Search,
+  Tweet,
   TweetUpload,
   Video,
   VideoUpload,
@@ -31,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "video/:videoId",
         element: <Video />,
+      },
+      {
+        path: "tweet/:tweetId",
+        element: <Tweet />,
       },
       {
         path: "users/channel/:username",
