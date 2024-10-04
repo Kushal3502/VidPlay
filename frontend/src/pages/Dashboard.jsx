@@ -87,7 +87,7 @@ function Dashboard() {
             <Videos userId={userData._id} />
           </div>
           <Separator className="my-4" />
-          <div>
+          <div className="lg:px-6">
             <h2 className="lg:text-3xl mb-4">Tweets</h2>
             <Tweets userId={userData._id} />
           </div>

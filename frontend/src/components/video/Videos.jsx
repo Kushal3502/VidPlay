@@ -12,6 +12,7 @@ function Videos({ userId, query }) {
     else if (query) url = `http://127.0.0.1:8000/api/v1/videos/?query=${query}`;
     else url = "http://127.0.0.1:8000/api/v1/videos";
 
+
     try {
       const response = await axios.get(url, { withCredentials: true });
       console.log(response.data);
