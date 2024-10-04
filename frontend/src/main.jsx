@@ -13,6 +13,7 @@ import {
   Layout,
   Login,
   Register,
+  Search,
   TweetUpload,
   Video,
   VideoUpload,
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "search",
+        element: <Search />,
       },
       {
         path: "upload/",

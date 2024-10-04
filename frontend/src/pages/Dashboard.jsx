@@ -1,4 +1,4 @@
-import { Tweets, VideoCard } from "@/components";
+import { Tweets, Videos } from "@/components";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -82,7 +82,7 @@ function Dashboard() {
       <Separator className="my-4" />
       {userData && (
         <div>
-          <div className=" p-4 sm:p-6 lg:p-4">
+          {/* <div className=" p-4 sm:p-6 lg:p-4">
             <h2 className="lg:text-3xl mb-4">Popular videos</h2>
             {videos && videos.length > 0 ? (
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -98,6 +98,9 @@ function Dashboard() {
             ) : (
               <p>No videos available </p>
             )}
+          </div> */}
+          <div className="lg:px-6">
+            <Videos userId={userData._id} />
           </div>
           <Separator className="my-4" />
           <div>

@@ -1,12 +1,13 @@
 import Login from "./Login";
 import Register from "./Register";
 import Home from "./Home";
-import VideoCard from "./VideoCard";
+import VideoCard from "./video/VideoCard";
 import Comment from "./Comment";
 import CommentCard from "./CommentCard";
 import Navbar from "./Navbar";
 import Tweets from "./tweet/Tweets";
 import Videos from "./video/Videos";
+import Searchbox from "./Searchbox";
 
 export {
   Login,
@@ -17,5 +18,6 @@ export {
   CommentCard,
   Navbar,
   Tweets,
-  Videos
+  Videos,
+  Searchbox,
 };

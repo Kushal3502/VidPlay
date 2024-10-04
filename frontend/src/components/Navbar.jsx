@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -15,6 +14,7 @@ import { AtSign, LogOut, User, Video } from "lucide-react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/authSlice";
+import { Searchbox } from ".";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -37,21 +37,8 @@ function Navbar() {
     }
   };
 
-  // const handleProfile = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       "http://127.0.0.1:8000/api/v1/dashboard/stats",
-  //       { withCredentials: true }
-  //     );
-  //     console.log(response.data);
-  //     navigate("/dashboard");
-  //   } catch (error) {
-  //     console.log("Profile error :: ", error);
-  //   }
-  // };
-
   return (
-    <div className="flex flex-wrap justify-between items-center lg:py-4 lg:px-12 md:p-3 p-2 space-x-4">
+    <div className="flex flex-wrap justify-between items-end lg:py-4 lg:px-12 md:p-3 p-2 space-x-4">
       <Link to={"/"}>
         <img
           src="/Logo-removebg-preview.png"
@@ -59,20 +46,7 @@ function Navbar() {
           alt="Logo"
         />
       </Link>
-      <form className="flex flex-wrap justify-center items-center gap-4 w-full lg:w-auto">
-        <Input
-          type="text"
-          id="search"
-          placeholder="Search for videos"
-          className="w-full lg:w-[550px]  px-4 py-2 bg-transparent border-gray-600 text-white text-lg"
-        />
-        <Button
-          variant="destructive"
-          className="w-full lg:w-auto bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base"
-        >
-          Search
-        </Button>
-      </form>
+      <Searchbox/>
       <div className="mt-4 lg:mt-0 flex justify-center items-center gap-4">
         {userData ? (
           <p className=" hidden lg:block lg:text-lg">

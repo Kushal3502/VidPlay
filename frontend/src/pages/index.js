@@ -8,6 +8,7 @@ import Dashboard from "./Dashboard";
 import Layout from "./upload/Layout";
 import TweetUpload from "./upload/TweetUpload";
 import VideoUpload from "./upload/VideoUpload";
+import Search from "./Search";
 
 export {
   AuthLayout,
@@ -20,4 +21,5 @@ export {
   Layout,
   TweetUpload,
   VideoUpload,
+  Search,
 };

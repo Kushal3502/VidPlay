@@ -13,11 +13,13 @@ function Videos({ userId }) {
   const [videos, setVideos] = useState([]);
 
   const fetchVideos = async () => {
+    let url;
+
+    if (userId) url = `http://127.0.0.1:8000/api/v1/videos?userId=${userId}`;
+    else url = "http://127.0.0.1:8000/api/v1/videos";
+
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/v1/videos?userId=${userId}`,
-        { withCredentials: true }
-      );
+      const response = await axios.get(url, { withCredentials: true });
       console.log(response.data);
       setVideos(response.data.data);
     } catch (error) {
@@ -32,7 +34,7 @@ function Videos({ userId }) {
   return (
     <div className="">
       <h2 className="lg:text-3xl mb-4">Popular videos</h2>
-      <Carousel >
+      <Carousel>
         {videos && videos.length > 0 ? (
           <div>
             <CarouselContent>
@@ -40,15 +42,15 @@ function Videos({ userId }) {
                 <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                   <div
                     key={video._id}
-                    className=" rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+                    className=" transform hover:scale-105 transition-transform duration-300 cursor-pointer"
                   >
                     <VideoCard video={video} />
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden lg:block bg-transparent border-none"/>
-            <CarouselNext className="hidden lg:block bg-transparent border-none"/>
+            <CarouselPrevious className="hidden lg:block bg-transparent border-none" />
+            <CarouselNext className="hidden lg:block bg-transparent border-none" />
           </div>
         ) : (
           <p>No videos available</p>
