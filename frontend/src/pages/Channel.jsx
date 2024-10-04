@@ -94,10 +94,12 @@ function Channel() {
       {channel && (
         <div>
           <div className="lg:px-6">
+            <h2 className="lg:text-3xl mb-4">Popular videos</h2>
             <Videos userId={channel._id} />
           </div>
           <Separator className="my-4" />
           <div>
+            <h2 className="lg:text-3xl mb-4">Tweets</h2>
             <Tweets userId={channel._id} />
           </div>
         </div>

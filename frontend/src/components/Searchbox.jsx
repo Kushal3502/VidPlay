@@ -1,22 +1,16 @@
 import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Searchbox() {
   const [query, setQuery] = useState();
-const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
-
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/v1/videos/?query=${query}`,
-      { withCredentials: true }
-    );
-    console.log(response.data);
-    navigate("/search")
+    
+    navigate(`/search/?query=${query}`);
   };
 
   return (

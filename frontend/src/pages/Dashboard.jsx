@@ -82,28 +82,13 @@ function Dashboard() {
       <Separator className="my-4" />
       {userData && (
         <div>
-          {/* <div className=" p-4 sm:p-6 lg:p-4">
-            <h2 className="lg:text-3xl mb-4">Popular videos</h2>
-            {videos && videos.length > 0 ? (
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {videos.map((video) => (
-                  <div
-                    key={video._id}
-                    className=" rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"
-                  >
-                    <VideoCard data={video} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p>No videos available </p>
-            )}
-          </div> */}
           <div className="lg:px-6">
+            <h2 className="lg:text-3xl mb-4">Popular videos</h2>
             <Videos userId={userData._id} />
           </div>
           <Separator className="my-4" />
           <div>
+            <h2 className="lg:text-3xl mb-4">Tweets</h2>
             <Tweets userId={userData._id} />
           </div>
         </div>

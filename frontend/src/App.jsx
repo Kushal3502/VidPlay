@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Navbar } from "./components";
 
@@ -8,9 +8,9 @@ function App() {
   useEffect(() => {
     navigate("/");
   }, []);
-  
+
   return (
-    <div className=" h-full">
+    <div className=" h-screen">
       <Navbar />
       <Outlet />
     </div>

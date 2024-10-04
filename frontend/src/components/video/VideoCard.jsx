@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 function VideoCard({video}) {
   return (
-    <div className=" p-2">
+    <div className="border border-zinc-600 rounded-lg p-2">
       <Link to={`/video/${video?._id}`}>
         <img src={video?.thumbnail} className=" rounded-lg mb-2 " />
         <div className="flex items-center justify-between px-2">
