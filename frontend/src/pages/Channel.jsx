@@ -20,6 +20,7 @@ function Channel() {
         { withCredentials: true }
       );
       console.log(response.data);
+      console.log(response.data.data.isSubscribed);
       setChannel(response.data.data);
       setSubscribeStatus(response.data.data.isSubscribed);
     } catch (error) {
@@ -35,7 +36,7 @@ function Channel() {
         {},
         { withCredentials: true }
       );
-      console.log(response.data);
+      // console.log(response.data);
       setSubscribeStatus((prevStatus) => !prevStatus);
     } catch (error) {
       console.log("Subscription error :: ", error);
@@ -44,8 +45,9 @@ function Channel() {
 
   useEffect(() => {
     fetchChannel();
-    console.log(subscribeStatus);
-  }, [username, subscribeStatus]);
+  }, []);
+
+  console.log(subscribeStatus);
 
   return (
     <div className="max-w-7xl mx-auto lg:p-8 p-2">

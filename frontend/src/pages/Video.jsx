@@ -1,33 +1,20 @@
-import { CommentCard } from "@/components";
-import { AnimatedSubscribeButton } from "@/components/ui/animated-subscribe-button";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Comment } from "@/components";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
 import ReactPlayer from "react-player";
-import { Link, useParams } from "react-router-dom";
-import { CheckIcon, ChevronRightIcon } from "lucide-react";
+import { useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { BiLike } from "react-icons/bi";
+import { IoMdEye } from "react-icons/io";
 
 function Video() {
-  const [video, setVideo] = useState();
-  const [isOwner, setIsOwner] = useState(false);
-  const [user, setUser] = useState();
-  const [comments, setComments] = useState([]);
   const { videoId } = useParams();
-
-  const getCurrentUser = async () => {
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/v1/users/user",
-        {
-          withCredentials: true,
-        }
-      );
-      setUser(response.data.data);
-    } catch (error) {
-      console.log("User fetch error :: ", error);
-    }
-  };
+  const [video, setVideo] = useState();
+  const [channel, setChannel] = useState();
+  const [subscribeStatus, setSubscribeStatus] = useState(false);
+  const authStatus = useSelector((state) => state.auth.status);
+  const navigate = useNavigate();
 
   const fetchVideoDetails = async () => {
     try {
@@ -44,37 +31,50 @@ function Video() {
     }
   };
 
-  const fetchComments = async () => {
+  const fetchChannel = async (username) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/v1/comments/${videoId}`,
-        {
-          withCredentials: true,
-        }
+        `http://127.0.0.1:8000/api/v1/users/channel/${username}`,
+        { withCredentials: true }
       );
-      console.log(response.data.data);
-      setComments(response.data?.data);
+      console.log(response.data);
+      console.log(response.data.data.isSubscribed);
+      setChannel(response.data.data);
+      setSubscribeStatus(response.data.data.isSubscribed);
     } catch (error) {
-      console.log("Comment fetch error :: ", error);
+      console.log("Channel fetch error :: ", error);
+    }
+  };
+
+  const toggleSubscription = async () => {
+    console.log("click");
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/v1/subscriptions/c/${video?.owner._id}`,
+        {},
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      setSubscribeStatus((prevStatus) => !prevStatus);
+    } catch (error) {
+      console.log("Subscription error :: ", error);
     }
   };
 
   useEffect(() => {
     fetchVideoDetails();
-    getCurrentUser();
-    fetchComments();
   }, [videoId]);
-
+  
   useEffect(() => {
-    if (video && user && video.owner._id === user._id) {
-      setIsOwner(true);
+    if (video?.owner?.username) {
+      fetchChannel(video.owner.username);
     }
-  }, [video, user]);
+  }, [video]);
 
   return (
-    <div className=" lg:px-20 lg:py-8 sm:p-5 p-3">
-      <div className="sm:w-full max-w-6xl">
-        <div className="w-full sm:max-w-72 md:max-w-md lg:max-w-6xl rounded-lg overflow-hidden cursor-pointer">
+    <div className="w-full lg:max-w-5xl flex flex-col p-4 lg:px-8">
+      <div>
+        <div className="rounded-lg overflow-hidden">
           <ReactPlayer
             url={video?.videoFile}
             controls={true}
@@ -82,90 +82,53 @@ function Video() {
             height="100%"
           />
         </div>
-        <div>
-          <div>
-            <h1 className="lg:text-3xl sm:text-xl text-lg py-4">
-              {video?.title}
-            </h1>
-            <div className=" flex justify-between items-center ">
-              <div className=" flex justify-center items-center gap-4">
-                <Link
-                  to={`/users/channel/${video?.owner.username}`}
-                  className="flex justify-center items-center gap-4"
-                >
-                  <img
-                    src={video?.owner?.avatar}
-                    className=" lg:w-12 lg:h-12 sm:h-10 sm:w-10 w-8 h-8 rounded-full object-cover"
-                  />
-                  <p className="lg:text-xl ">{video?.owner?.username}</p>
-                </Link>
-                {/* <Button className=" bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base"> */}
-                <AnimatedSubscribeButton
-                  buttonColor="#000000"
-                  buttonTextColor="#ffffff"
-                  subscribeStatus={false}
-                  initialText={
-                    <span className="group inline-flex items-center">
-                      Subscribe{" "}
-                      <ChevronRightIcon className="ml-1 size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                    </span>
-                  }
-                  changeText={
-                    <span className="group inline-flex items-center">
-                      <CheckIcon className="mr-2 size-4" />
-                      Subscribed{" "}
-                    </span>
-                  }
+        <div className="w-full p-4">
+          <h1 className="lg:text-3xl sm:text-xl text-lg lg:mb-4 mb-2">
+            {video?.title}
+          </h1>
+          <div className="w-full flex flex-row justify-between items-center gap-4 lg:gap-0">
+            <div className="flex items-center gap-4">
+              <Link
+                to={`/users/channel/${video?.owner.username}`}
+                className="flex items-center gap-4"
+              >
+                <img
+                  src={video?.owner?.avatar}
+                  className="lg:w-12 lg:h-12 sm:h-10 sm:w-10 w-8 h-8 rounded-full object-cover"
+                  alt="Avatar"
                 />
-                {/* </Button> */}
-                {isOwner && (
-                  <Link to={"/dashboard"}>
-                    <Button className=" bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base">
-                      View Channel
-                    </Button>
-                  </Link>
-                )}
+                <p className="lg:text-xl text-lg font-medium">
+                  {video?.owner?.username}
+                </p>
+              </Link>
+              <Button
+                onClick={() => {
+                  if (authStatus) {
+                    toggleSubscription();
+                  } else {
+                    navigate("/auth/login");
+                  }
+                }}
+                className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md"
+              >
+                {subscribeStatus ? "Subscribed" : "Subscribe"}
+              </Button>
+            </div>
+            <div className="flex items-center lg:gap-3 gap-2 text-center">
+              <div className="flex flex-col items-center text-center">
+                <IoMdEye className="lg:text-lg" />
+                <p className="">{video?.views} views</p>
               </div>
-              <div className=" pr-3 flex justify-center items-center gap-5">
-                <div>
-                  <img src="https://img.icons8.com/?size=100&id=4y6r43dyjbzw&format=png&color=FFFFFF" />
-                  <p>{video?.views} views</p>
-                </div>
-                <div>
-                  <img src="https://img.icons8.com/?size=100&id=24816&format=png&color=FFFFFF" />
-                  <p>{video?.likes} likes</p>
-                </div>
-                <div>
-                  <img src="https://img.icons8.com/?size=100&id=25157&format=png&color=FFFFFF" />
-                  <p>Save</p>
-                </div>
+              <div className="flex flex-col items-center text-center">
+                <BiLike className="lg:text-lg" />
+                <p className="">{video?.likes} likes</p>
               </div>
             </div>
           </div>
         </div>
-        <div>
-          <h2 className="lg:text-xl sm:text-lg text-base">Comments</h2>
-          <div className="grid w-full gap-2 my-4">
-            <Textarea
-              placeholder="Type your message here."
-              className=" bg-transparent"
-            />
-            <Button className=" bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base">
-              Add Comment
-            </Button>
-          </div>
-          {comments && comments.length > 0 ? (
-            <ul>
-              {comments.map((comment) => (
-                <div className="mb-6" key={comment?._id}>
-                  <CommentCard comment={comment} />
-                </div>
-              ))}
-            </ul>
-          ) : (
-            <h2>No comments!!!</h2>
-          )}
-        </div>
+      </div>
+      <div>
+        <Comment videoId={videoId} />
       </div>
     </div>
   );
