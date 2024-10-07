@@ -8,6 +8,7 @@ import Navbar from "./Navbar";
 import Tweets from "./tweet/Tweets";
 import Videos from "./video/Videos";
 import Searchbox from "./Searchbox";
+import LikeButton from "./LikeButton";
 
 export {
   Login,
@@ -20,4 +21,5 @@ export {
   Tweets,
   Videos,
   Searchbox,
+  LikeButton,
 };

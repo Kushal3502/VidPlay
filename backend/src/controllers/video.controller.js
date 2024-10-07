@@ -140,6 +140,13 @@ const getVideoById = asyncHandler(async (req, res) => {
         localField: "_id",
         foreignField: "video",
         as: "likes",
+        pipeline: [
+          {
+            $project: {
+              likedBy: 1,
+            },
+          },
+        ],
       },
     },
     {
@@ -152,9 +159,9 @@ const getVideoById = asyncHandler(async (req, res) => {
     },
     {
       $addFields: {
-        likes: {
-          $size: "$likes",
-        },
+        // likes: {
+        //   $size: "$likes",
+        // },
         comments: {
           $size: "$comments",
         },
