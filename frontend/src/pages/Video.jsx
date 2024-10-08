@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoMdEye } from "react-icons/io";
+import { Pencil, Trash2 } from "lucide-react";
 
 function Video() {
   const { videoId } = useParams();
@@ -44,6 +45,17 @@ function Video() {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/v1/videos/${videoId}`, {
+        withCredentials: true,
+      });
+      navigate("/");
+    } catch (error) {
+      console.log("Video delete error :: ", error);
+    }
+  };
+
   useEffect(() => {
     if (videoId) {
       fetchVideoDetails();
@@ -51,7 +63,7 @@ function Video() {
   }, [videoId]);
 
   return (
-    <div className="w-full lg:max-w-5xl flex flex-col p-4 lg:px-8">
+    <div className="w-full lg:max-w-7xl flex flex-col p-4 lg:px-8">
       {video ? (
         <div>
           <div className="rounded-lg overflow-hidden">
@@ -95,12 +107,20 @@ function Video() {
                   {subscribeStatus ? "Subscribed" : "Subscribe"}
                 </Button>
                 {user.status && user.userData._id === video?.owner?._id && (
-                  <div className=" flex gap-4">
+                  <div className=" flex gap-2">
                     <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
                       <Link to={"/dashboard"}>View channel</Link>
                     </Button>
-                    <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
-                      Edit
+                    <Link to={`/edit/video/${videoId}`}>
+                      <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
+                        <Pencil />
+                      </Button>
+                    </Link>
+                    <Button
+                      className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md"
+                      onClick={handleDelete}
+                    >
+                      <Trash2 />
                     </Button>
                   </div>
                 )}

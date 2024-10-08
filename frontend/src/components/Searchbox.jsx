@@ -9,7 +9,6 @@ function Searchbox() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    
     navigate(`/search/?query=${query}`);
   };
 

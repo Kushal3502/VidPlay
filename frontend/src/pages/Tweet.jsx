@@ -2,14 +2,16 @@ import { Comment, LikeButton } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import { Pencil, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Tweet() {
   const { tweetId } = useParams();
   const [tweet, setTweet] = useState();
   const user = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const fetchTweet = async () => {
     try {
@@ -20,6 +22,17 @@ function Tweet() {
       setTweet(response.data.data);
     } catch (error) {
       console.log("Tweet fetch error :: ", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/v1/tweets/${tweetId}`, {
+        withCredentials: true,
+      });
+      navigate("/");
+    } catch (error) {
+      console.log("Tweet delete error :: ", error);
     }
   };
 
@@ -40,9 +53,19 @@ function Tweet() {
               <h2 className=" lg:text-xl">{tweet?.owner.username}</h2>
             </div>
             {tweet?.owner._id == user.userData._id && (
-              <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
-                Edit
-              </Button>
+              <div className=" flex justify-center items-center gap-2">
+                <Link to={`/edit/tweet/${tweetId}`}>
+                  <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
+                    <Pencil />
+                  </Button>
+                </Link>
+                <Button
+                  className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md"
+                  onClick={handleDelete}
+                >
+                  <Trash2 />
+                </Button>
+              </div>
             )}
           </div>
           <div className=" mb-4">

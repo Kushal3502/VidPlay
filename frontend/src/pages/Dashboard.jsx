@@ -11,18 +11,18 @@ function Dashboard() {
 
   console.log(userData);
 
-  const fetchVideos = async () => {
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/v1/dashboard/videos",
-        { withCredentials: true }
-      );
-      console.log(response.data);
-      setVideos(response.data.data);
-    } catch (error) {
-      console.log("Video fetch error :: ", error);
-    }
-  };
+  // const fetchVideos = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://127.0.0.1:8000/api/v1/dashboard/videos",
+  //       { withCredentials: true }
+  //     );
+  //     console.log(response.data);
+  //     setVideos(response.data.data);
+  //   } catch (error) {
+  //     console.log("Video fetch error :: ", error);
+  //   }
+  // };
 
   const fetchStats = async () => {
     try {
@@ -39,7 +39,7 @@ function Dashboard() {
 
   useEffect(() => {
     fetchStats();
-    fetchVideos();
+    // fetchVideos();
   }, []);
 
   return (

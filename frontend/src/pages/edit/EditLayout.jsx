@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-function Layout() {
+function EditLayout() {
   return (
     <div className="flex items-start justify-center mt-20">
       <Outlet />
@@ -9,4 +9,4 @@ function Layout() {
   );
 }
 
-export default Layout;
+export default EditLayout;

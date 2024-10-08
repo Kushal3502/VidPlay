@@ -6,9 +6,11 @@ import Comment from "./comment/Comment";
 import CommentCard from "./comment/CommentCard";
 import Navbar from "./Navbar";
 import Tweets from "./tweet/Tweets";
+import TweetCard from "./tweet/TweetCard";
 import Videos from "./video/Videos";
 import Searchbox from "./Searchbox";
 import LikeButton from "./LikeButton";
+import SubscribeButton from "./SubscribeButton";
 
 export {
   Login,
@@ -19,7 +21,9 @@ export {
   CommentCard,
   Navbar,
   Tweets,
+  TweetCard,
   Videos,
   Searchbox,
   LikeButton,
+  SubscribeButton,
 };

@@ -8,14 +8,18 @@ import {
   AuthLayout,
   Channel,
   Dashboard,
+  EditLayout,
   Home,
   Layout,
+  Likes,
   Login,
   Register,
   Search,
   Tweet,
+  TweetEdit,
   TweetUpload,
   Video,
+  VideoEdit,
   VideoUpload,
 } from "./pages/index.js";
 
@@ -27,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "likes",
+        element: <Likes />,
       },
       {
         path: "video/:videoId",
@@ -49,7 +57,7 @@ const router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: "upload/",
+        path: "upload",
         element: <Layout />,
         children: [
           {
@@ -59,6 +67,20 @@ const router = createBrowserRouter([
           {
             path: "tweet",
             element: <TweetUpload />,
+          },
+        ],
+      },
+      {
+        path: "edit",
+        element: <EditLayout />,
+        children: [
+          {
+            path: "video/:videoId",
+            element: <VideoEdit />,
+          },
+          {
+            path: "tweet/:tweetId",
+            element: <TweetEdit />,
           },
         ],
       },

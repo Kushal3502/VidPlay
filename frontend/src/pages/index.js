@@ -11,6 +11,10 @@ import TweetUpload from "./upload/TweetUpload";
 import VideoUpload from "./upload/VideoUpload";
 import Search from "./Search";
 import Tweet from "./Tweet";
+import Likes from "./Likes";
+import EditLayout from "./edit/EditLayout";
+import VideoEdit from "./edit/VideoEdit";
+import TweetEdit from "./edit/TweetEdit";
 
 export {
   AuthLayout,
@@ -25,4 +29,8 @@ export {
   VideoUpload,
   Search,
   Tweet,
+  Likes,
+  EditLayout,
+  VideoEdit,
+  TweetEdit,
 };

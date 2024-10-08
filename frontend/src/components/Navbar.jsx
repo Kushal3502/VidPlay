@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AtSign, LogOut, User, Video } from "lucide-react";
+import { AtSign, LogOut, ThumbsUp, User, Video } from "lucide-react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/authSlice";
@@ -87,6 +87,10 @@ function Navbar() {
               <DropdownMenuItem className="text-lg">
                 <AtSign className="mr-2 h-4 w-4" />
                 <span onClick={() => navigate("/upload/tweet")}>New post</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-lg">
+                <ThumbsUp className="mr-2 h-4 w-4" />
+                <span onClick={() => navigate("/likes")}>Likes</span>
               </DropdownMenuItem>
               <DropdownMenuItem className="text-red-600 text-lg">
                 <LogOut className="mr-2 h-4 w-4" />
