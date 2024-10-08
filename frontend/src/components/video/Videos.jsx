@@ -29,7 +29,7 @@ function Videos({ userId, query }) {
   return (
     <div className="">
       {videos && videos.length > 0 ? (
-        <div className="grid lg:grid-cols-4 sm:grid-col-2 grid-col-1 gap-3">
+        <div className="grid lg:grid-cols-4 sm:grid-col-2 grid-col-1 gap-8">
           {videos.map((video) => (
             <div
               key={video._id}

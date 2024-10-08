@@ -49,15 +49,22 @@ const getVideoComments = asyncHandler(async (req, res) => {
         localField: "_id",
         foreignField: "comment",
         as: "likes",
+        pipeline: [
+          {
+            $project: {
+              likedBy: 1,
+            },
+          },
+        ],
       },
     },
-    {
-      $addFields: {
-        likes: {
-          $size: "$likes",
-        },
-      },
-    },
+    // {
+    //   $addFields: {
+    //     likes: {
+    //       $size: "$likes",
+    //     },
+    //   },
+    // },
     {
       $skip: (parseInt(page) - 1) * parseInt(limit),
     },
@@ -114,15 +121,22 @@ const getTweetComments = asyncHandler(async (req, res) => {
         localField: "_id",
         foreignField: "comment",
         as: "likes",
+        pipeline: [
+          {
+            $project: {
+              likedBy: 1,
+            },
+          },
+        ],
       },
     },
-    {
-      $addFields: {
-        likes: {
-          $size: "$likes",
-        },
-      },
-    },
+    // {
+    //   $addFields: {
+    //     likes: {
+    //       $size: "$likes",
+    //     },
+    //   },
+    // },
     {
       $skip: (parseInt(page) - 1) * parseInt(limit),
     },

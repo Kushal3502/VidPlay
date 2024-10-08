@@ -70,7 +70,7 @@ function Comment({ tweetId, videoId }) {
       {comments && comments.length > 0 ? (
         <ul>
           {comments.map((comment) => (
-            <div className="mb-6" key={comment?._id}>
+            <div className="mb-3" key={comment?._id}>
               <CommentCard comment={comment} />
             </div>
           ))}

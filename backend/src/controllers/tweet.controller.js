@@ -71,6 +71,13 @@ const getTweetById = asyncHandler(async (req, res) => {
         localField: "_id",
         foreignField: "tweet",
         as: "likes",
+        pipeline: [
+          {
+            $project: {
+              likedBy: 1,
+            },
+          },
+        ],
       },
     },
     {
@@ -83,9 +90,9 @@ const getTweetById = asyncHandler(async (req, res) => {
     },
     {
       $addFields: {
-        likes: {
-          $size: "$likes",
-        },
+        // likes: {
+        //   $size: "$likes",
+        // },
         comments: {
           $size: "$comments",
         },

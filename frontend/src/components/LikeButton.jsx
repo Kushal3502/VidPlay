@@ -3,20 +3,34 @@ import React, { useEffect, useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { useSelector } from "react-redux";
 
-function LikeButton({ video, tweetId, commentId }) {
+function LikeButton({ video, tweet, comment }) {
   const [isLiked, setIsLiked] = useState(false);
   const user = useSelector((state) => state.auth);
 
   let url;
 
   if (video) url = `http://127.0.0.1:8000/api/v1/likes/toggle/v/${video._id}`;
-  else if (tweetId)
-    url = `http://127.0.0.1:8000/api/v1/likes/toggle/t/${tweetId}`;
-  else url = `http://127.0.0.1:8000/api/v1/likes/toggle/c/${commentId}`;
+  else if (tweet)
+    url = `http://127.0.0.1:8000/api/v1/likes/toggle/t/${tweet._id}`;
+  else url = `http://127.0.0.1:8000/api/v1/likes/toggle/c/${comment._id}`;
 
   const likeStatus = async () => {
     if (video) {
       const idx = video.likes.findIndex(
+        (like) => like.likedBy === user.userData._id
+      );
+      if (idx !== -1) {
+        setIsLiked(true);
+      }
+    } else if (tweet) {
+      const idx = tweet.likes.findIndex(
+        (like) => like.likedBy === user.userData._id
+      );
+      if (idx !== -1) {
+        setIsLiked(true);
+      }
+    } else {
+      const idx = comment.likes.findIndex(
         (like) => like.likedBy === user.userData._id
       );
       if (idx !== -1) {

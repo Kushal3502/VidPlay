@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 function VideoCard({video}) {
   return (
-    <div className="border border-zinc-600 rounded-lg p-2">
+    <div className="border border-zinc-600 rounded-lg p-2 h-full">
       <Link to={`/video/${video?._id}`}>
         <img src={video?.thumbnail} className=" rounded-lg mb-2 " />
         <div className="flex items-center justify-between px-2">
@@ -13,8 +13,8 @@ function VideoCard({video}) {
               className=" lg:w-10 lg:h-10 sm:h-10 sm:w-10 w-8 h-8 rounded-full object-cover"
             />
             <div>
-              <p className="lg:text-lg">{video?.title}</p>
-              <p className="lg:text-lg text-gray-400">{video?.owner.username}</p>
+              <p className="">{video?.title}</p>
+              <p className=" text-gray-400">{video?.owner.username}</p>
             </div>
           </div>
           <p className=" text-gray-400">{video?.views} views</p>

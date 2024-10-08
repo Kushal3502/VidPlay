@@ -1,12 +1,15 @@
-import { Comment } from "@/components";
+import { Comment, LikeButton } from "@/components";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 function Tweet() {
   const { tweetId } = useParams();
   const [tweet, setTweet] = useState();
+  const user = useSelector((state) => state.auth);
 
   const fetchTweet = async () => {
     try {
@@ -28,18 +31,27 @@ function Tweet() {
     <div className="max-w-2xl mx-auto lg:my-8 my-4 lg:p-4 border border-zinc-600 rounded-lg">
       {tweet && (
         <div>
-          <div className=" flex justify-start items-center gap-4 mb-6">
-            <img
-              src={tweet?.owner.avatar}
-              className=" lg:w-12 lg:h-12 w-10 h-10 rounded-full object-cover"
-            />
-            <h2 className=" lg:text-xl">{tweet?.owner.username}</h2>
+          <div className=" flex justify-between items-start">
+            <div className=" flex justify-start items-center gap-4 mb-6">
+              <img
+                src={tweet?.owner.avatar}
+                className=" lg:w-12 lg:h-12 w-10 h-10 rounded-full object-cover"
+              />
+              <h2 className=" lg:text-xl">{tweet?.owner.username}</h2>
+            </div>
+            {tweet?.owner._id == user.userData._id && (
+              <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
+                Edit
+              </Button>
+            )}
           </div>
           <div className=" mb-4">
             <p className=" lg:text-lg text-justify mb-2">{tweet?.content}</p>
             <img src={tweet?.tweetImage} className="rounded-lg " />
-                  </div>
-                  <Separator className="my-4" />
+          </div>
+          <Separator className="my-4" />
+          <LikeButton tweet={tweet} />
+          <Separator className="my-4" />
           <div>
             <Comment tweetId={tweet?._id} />
           </div>

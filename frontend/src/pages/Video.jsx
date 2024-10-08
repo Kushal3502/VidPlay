@@ -53,7 +53,7 @@ function Video() {
   return (
     <div className="w-full lg:max-w-5xl flex flex-col p-4 lg:px-8">
       {video ? (
-        <>
+        <div>
           <div className="rounded-lg overflow-hidden">
             <ReactPlayer
               url={video?.videoFile}
@@ -81,6 +81,7 @@ function Video() {
                     {video?.owner?.username}
                   </p>
                 </Link>
+                {/* Fix subscribe button */}
                 <Button
                   onClick={() => {
                     if (user.status) {
@@ -94,9 +95,14 @@ function Video() {
                   {subscribeStatus ? "Subscribed" : "Subscribe"}
                 </Button>
                 {user.status && user.userData._id === video?.owner?._id && (
-                  <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
-                    <Link to={"/dashboard"}>View channel</Link>
-                  </Button>
+                  <div className=" flex gap-4">
+                    <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
+                      <Link to={"/dashboard"}>View channel</Link>
+                    </Button>
+                    <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
+                      Edit
+                    </Button>
+                  </div>
                 )}
               </div>
               <div className="flex items-center lg:gap-3 gap-2 text-center">
@@ -111,7 +117,7 @@ function Video() {
           <div>
             <Comment videoId={videoId} />
           </div>
-        </>
+        </div>
       ) : (
         <p>Loading video...</p>
       )}
