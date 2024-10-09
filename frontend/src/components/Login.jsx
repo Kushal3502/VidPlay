@@ -45,7 +45,7 @@ function Login() {
     <div className="min-h-screen flex flex-col justify-center items-center">
       <div className="p-8 shadow-md rounded-xl max-w-screen-md w-full border-2 border-white">
         <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl mb-8 font-mono">
-          Welcome back🫦💦
+          Welcome back
         </h2>
         <form
           onSubmit={handleSubmit(handleLogin)}

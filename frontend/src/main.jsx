@@ -13,6 +13,7 @@ import {
   Layout,
   Likes,
   Login,
+  PlaylistUpload,
   Register,
   Search,
   Tweet,
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
           {
             path: "tweet",
             element: <TweetUpload />,
+          },
+          {
+            path: "playlist",
+            element: <PlaylistUpload />,
           },
         ],
       },

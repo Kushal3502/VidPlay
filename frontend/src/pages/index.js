@@ -9,6 +9,7 @@ import Dashboard from "./Dashboard";
 import Layout from "./upload/Layout";
 import TweetUpload from "./upload/TweetUpload";
 import VideoUpload from "./upload/VideoUpload";
+import PlaylistUpload from "./upload/PlaylistUpload";
 import Search from "./Search";
 import Tweet from "./Tweet";
 import Likes from "./Likes";
@@ -27,6 +28,7 @@ export {
   Layout,
   TweetUpload,
   VideoUpload,
+  PlaylistUpload,
   Search,
   Tweet,
   Likes,

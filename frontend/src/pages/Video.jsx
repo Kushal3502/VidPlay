@@ -6,11 +6,26 @@ import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoMdEye } from "react-icons/io";
-import { Pencil, Trash2 } from "lucide-react";
+import { CirclePlus, Pencil, Trash2 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function Video() {
   const { videoId } = useParams();
   const [video, setVideo] = useState(null);
+  const [playlist, setPlaylist] = useState();
   const [subscribeStatus, setSubscribeStatus] = useState(false);
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -27,6 +42,18 @@ function Video() {
       setVideo(response.data.data);
     } catch (error) {
       console.log("Video fetch error :: ", error);
+    }
+  };
+
+  const fetchUserPlaylists = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/v1/playlist/user/${user?.userData._id}`,
+        { withCredentials: true }
+      );
+      setPlaylist(response.data.data);
+    } catch (error) {
+      console.log("Playlist fetch error :: ", error);
     }
   };
 
@@ -59,6 +86,7 @@ function Video() {
   useEffect(() => {
     if (videoId) {
       fetchVideoDetails();
+      fetchUserPlaylists();
     }
   }, [videoId]);
 
@@ -106,35 +134,75 @@ function Video() {
                 >
                   {subscribeStatus ? "Subscribed" : "Subscribe"}
                 </Button>
+                {user.status && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
+                        Add to playlist
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
+                      <DropdownMenuLabel className="text-lg">
+                        Playlists
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {playlist && playlist.length > 0 ? (
+                        playlist.map((playlist) => (
+                          <DropdownMenuItem
+                            key={playlist.id}
+                            className="text-lg"
+                          >
+                            {playlist.name}
+                          </DropdownMenuItem>
+                        ))
+                      ) : (
+                        <DropdownMenuItem className="text-lg">
+                          <CirclePlus className="mr-2 h-4 w-4" />
+                          <span onClick={() => navigate("/upload/playlist")}>
+                            Create new playlist
+                          </span>
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
+              <div className="flex items-center lg:gap-3 gap-2 text-center">
                 {user.status && user.userData._id === video?.owner?._id && (
                   <div className=" flex gap-2">
                     <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
                       <Link to={"/dashboard"}>View channel</Link>
                     </Button>
                     <Link to={`/edit/video/${videoId}`}>
-                      <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
+                      <Button className="bg-green-700 hover:bg-green-800 font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
                         <Pencil />
                       </Button>
                     </Link>
                     <Button
-                      className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md"
+                      className="bg-red-600 hover:bg-red-700 font-semibold px-2 sm:px-4 py-2 rounded-md"
                       onClick={handleDelete}
                     >
                       <Trash2 />
                     </Button>
                   </div>
                 )}
-              </div>
-              <div className="flex items-center lg:gap-3 gap-2 text-center">
-                {/* <div className="flex flex-col items-center text-center">
-                  <IoMdEye className="lg:text-lg" />
-                  <p>{video?.views} views</p>
-                </div> */}
                 <LikeButton video={video} />
               </div>
             </div>
+            <div>
+              <Accordion type="single" collapsible>
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className=" lg:text-xl text-lg">
+                    Description
+                  </AccordionTrigger>
+                  <AccordionContent className=" lg:text-lg text-justify">
+                    {video?.description}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           </div>
-          <div>
+          <div className="p-4">
             <Comment videoId={videoId} />
           </div>
         </div>
