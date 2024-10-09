@@ -21,14 +21,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 function Video() {
   const { videoId } = useParams();
+
   const [video, setVideo] = useState(null);
   const [playlist, setPlaylist] = useState();
   const [subscribeStatus, setSubscribeStatus] = useState(false);
+
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
+  const { toast } = useToast();
 
   const fetchVideoDetails = async () => {
     try {
@@ -54,6 +59,26 @@ function Video() {
       setPlaylist(response.data.data);
     } catch (error) {
       console.log("Playlist fetch error :: ", error);
+    }
+  };
+
+  const addVideo = async (playlistId) => {
+    try {
+      await axios.patch(
+        `http://127.0.0.1:8000/api/v1/playlist/add/${videoId}/${playlistId}`,
+        {},
+        { withCredentials: true }
+      );
+      toast({
+        description: "Video added successfully",
+      });
+    } catch (error) {
+      console.log("Video add error :: ", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
     }
   };
 
@@ -151,6 +176,9 @@ function Video() {
                           <DropdownMenuItem
                             key={playlist.id}
                             className="text-lg"
+                            onClick={() => {
+                              addVideo(playlist?._id);
+                            }}
                           >
                             {playlist.name}
                           </DropdownMenuItem>
