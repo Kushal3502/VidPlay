@@ -24,53 +24,79 @@ import { useToast } from "@/hooks/use-toast";
 
 function Video() {
   const { videoId } = useParams();
-
   const [video, setVideo] = useState(null);
-  const [playlist, setPlaylist] = useState();
+  const [playlist, setPlaylist] = useState([]);
   const [subscribeStatus, setSubscribeStatus] = useState(false);
+  const [views, setViews] = useState(0);
 
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
   const { toast } = useToast();
 
   const fetchVideoDetails = async () => {
     try {
       const response = await axios.get(
         `http://127.0.0.1:8000/api/v1/videos/${videoId}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-      console.log(response.data.data);
       setVideo(response.data.data);
+      console.log(response.data.data.views);
+      updateViews(response.data.data.views + 1);
     } catch (error) {
       console.log("Video fetch error :: ", error);
     }
   };
 
-  const fetchUserPlaylists = async () => {
+  const updateViews = async (newViews) => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/v1/playlist/user/${user?.userData._id}`,
-        { withCredentials: true }
+      await axios.patch(
+        `http://127.0.0.1:8000/api/v1/videos/${videoId}`,
+        {
+          views: newViews,
+        },
+        {
+          withCredentials: true,
+        }
       );
-      setPlaylist(response.data.data);
     } catch (error) {
-      console.log("Playlist fetch error :: ", error);
+      console.log("Update views error :: ", error);
     }
   };
 
-  const addVideo = async (playlistId) => {
+  const fetchChannel = async (username) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/v1/users/channel/${username}`,
+        { withCredentials: true }
+      );
+      setSubscribeStatus(response.data.data.isSubscribed);
+    } catch (error) {
+      console.log("Channel fetch error :: ", error);
+    }
+  };
+
+  const fetchUserPlaylists = async () => {
+    if (user?.userData) {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/v1/playlist/user/${user?.userData._id}`,
+          { withCredentials: true }
+        );
+        setPlaylist(response.data.data);
+      } catch (error) {
+        console.log("Playlist fetch error :: ", error);
+      }
+    }
+  };
+
+  const addVideoToPlaylist = async (playlistId) => {
     try {
       await axios.patch(
         `http://127.0.0.1:8000/api/v1/playlist/add/${videoId}/${playlistId}`,
         {},
         { withCredentials: true }
       );
-      toast({
-        description: "Video added successfully",
-      });
+      toast({ description: "Video added successfully" });
     } catch (error) {
       console.log("Video add error :: ", error);
       toast({
@@ -82,21 +108,20 @@ function Video() {
   };
 
   const toggleSubscription = async () => {
-    console.log("click");
+    if (!video) return;
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/v1/subscriptions/c/${video?.owner._id}`,
+      await axios.post(
+        `http://127.0.0.1:8000/api/v1/subscriptions/c/${video.owner._id}`,
         {},
         { withCredentials: true }
       );
-      console.log(response.data);
       setSubscribeStatus((prevStatus) => !prevStatus);
     } catch (error) {
       console.log("Subscription error :: ", error);
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteVideo = async () => {
     try {
       await axios.delete(`http://127.0.0.1:8000/api/v1/videos/${videoId}`, {
         withCredentials: true,
@@ -107,12 +132,20 @@ function Video() {
     }
   };
 
+  // Fetch video details and playlists on component mount
   useEffect(() => {
     if (videoId) {
       fetchVideoDetails();
       fetchUserPlaylists();
     }
   }, [videoId]);
+
+  // Fetch channel details when video is loaded
+  useEffect(() => {
+    if (video?.owner?.username) {
+      fetchChannel(video.owner.username);
+    }
+  }, [video]);
 
   return (
     <div className="w-full lg:max-w-7xl flex flex-col p-4 lg:px-8">
@@ -145,20 +178,23 @@ function Video() {
                     {video?.owner?.username}
                   </p>
                 </Link>
-                {/* Fix subscribe button */}
                 <Button
                   onClick={() => {
-                    if (user.status) {
+                    if (user?.status) {
                       toggleSubscription();
                     } else {
                       navigate("/auth/login");
                     }
                   }}
-                  className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md"
+                  className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base px-4 py-2 rounded-md"
                 >
-                  {subscribeStatus ? "Subscribed" : "Subscribe"}
+                  {user?.status
+                    ? subscribeStatus
+                      ? "Subscribed"
+                      : "Subscribe"
+                    : "Login to Subscribe"}
                 </Button>
-                {user.status && (
+                {user?.status && (
                   <DropdownMenu>
                     <DropdownMenuTrigger>
                       <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
@@ -171,15 +207,13 @@ function Video() {
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       {playlist && playlist.length > 0 ? (
-                        playlist.map((playlist) => (
+                        playlist.map((pl) => (
                           <DropdownMenuItem
-                            key={playlist.id}
+                            key={pl._id}
                             className="text-lg"
-                            onClick={() => {
-                              addVideo(playlist?._id);
-                            }}
+                            onClick={() => addVideoToPlaylist(pl._id)}
                           >
-                            {playlist.name}
+                            {pl.name}
                           </DropdownMenuItem>
                         ))
                       ) : (
@@ -195,10 +229,10 @@ function Video() {
                 )}
               </div>
               <div className="flex items-center lg:gap-3 gap-2 text-center">
-                {user.status && user.userData._id === video?.owner?._id && (
-                  <div className=" flex gap-2">
+                {user?.status && user.userData._id === video?.owner?._id && (
+                  <div className="flex gap-2">
                     <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
-                      <Link to={"/dashboard"}>View channel</Link>
+                      <Link to="/dashboard">View channel</Link>
                     </Button>
                     <Link to={`/edit/video/${videoId}`}>
                       <Button className="bg-green-700 hover:bg-green-800 font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
@@ -207,7 +241,7 @@ function Video() {
                     </Link>
                     <Button
                       className="bg-red-600 hover:bg-red-700 font-semibold px-2 sm:px-4 py-2 rounded-md"
-                      onClick={handleDelete}
+                      onClick={handleDeleteVideo}
                     >
                       <Trash2 />
                     </Button>
@@ -216,18 +250,16 @@ function Video() {
                 <LikeButton video={video} />
               </div>
             </div>
-            <div>
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className=" lg:text-xl text-lg">
-                    Description
-                  </AccordionTrigger>
-                  <AccordionContent className=" lg:text-lg text-justify">
-                    {video?.description}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="lg:text-xl text-lg">
+                  Description
+                </AccordionTrigger>
+                <AccordionContent className="lg:text-lg text-justify">
+                  {video?.description}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
           <div className="p-4">
             <Comment videoId={videoId} />

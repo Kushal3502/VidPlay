@@ -184,7 +184,7 @@ const updateVideo = asyncHandler(async (req, res) => {
 
   if (!video) throw new ApiError(404, "Video not found!!!");
 
-  const { title, description } = req.body;
+  const { title, description, views } = req.body;
   const thumbnailLocalPath = req.file?.path;
 
   let newThumbnail;
@@ -210,6 +210,7 @@ const updateVideo = asyncHandler(async (req, res) => {
         title,
         description,
         thumbnail: newThumbnail?.url || video.thumbnail,
+        views,
       },
     },
     { new: true }

@@ -31,7 +31,7 @@ function Channel() {
   const toggleSubscription = async () => {
     console.log("click");
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://127.0.0.1:8000/api/v1/subscriptions/c/${channel?._id}`,
         {},
         { withCredentials: true }
@@ -45,7 +45,7 @@ function Channel() {
 
   useEffect(() => {
     fetchChannel();
-  }, []);
+  }, [subscribeStatus]);
 
   console.log(subscribeStatus);
 

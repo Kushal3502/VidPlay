@@ -29,6 +29,7 @@ function VideoUpload() {
         formData,
         { withCredentials: true }
       );
+      navigate("/");
       console.log(response.data);
     } catch (error) {
       console.log("Post error :: ", error);
@@ -94,7 +95,7 @@ function VideoUpload() {
               id="picture"
               type="file"
               className="rounded-md p-2"
-              onChange={(e)=>setThumbnail(e.target.files[0])}
+              onChange={(e) => setThumbnail(e.target.files[0])}
             />
           </div>
         </div>
