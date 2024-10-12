@@ -5,8 +5,7 @@ import axios from "axios";
 import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { IoMdEye } from "react-icons/io";
-import { CirclePlus, Pencil, Trash2 } from "lucide-react";
+import { CirclePlus, ListPlus, Pencil, Trash2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -163,7 +162,7 @@ function Video() {
                   <DropdownMenu>
                     <DropdownMenuTrigger>
                       <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
-                        Add to playlist
+                        <ListPlus />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">

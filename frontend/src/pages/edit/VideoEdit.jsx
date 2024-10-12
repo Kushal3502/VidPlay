@@ -30,7 +30,7 @@ function VideoEdit() {
     }
   };
 
-  const updateTweet = async (e) => {
+  const updateVideo = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
@@ -107,7 +107,7 @@ function VideoEdit() {
         <div className="flex justify-end mt-6">
           <Button
             className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base px-4 py-2 rounded-md"
-            onClick={updateTweet}
+            onClick={updateVideo}
           >
             Save
           </Button>

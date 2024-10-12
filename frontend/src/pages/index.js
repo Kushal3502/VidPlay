@@ -16,6 +16,8 @@ import Likes from "./Likes";
 import EditLayout from "./edit/EditLayout";
 import VideoEdit from "./edit/VideoEdit";
 import TweetEdit from "./edit/TweetEdit";
+import Playlist from "./Playlist";
+import PlaylistEdit from "./edit/PlaylistEdit";
 
 export {
   AuthLayout,
@@ -35,4 +37,6 @@ export {
   EditLayout,
   VideoEdit,
   TweetEdit,
+  Playlist,
+  PlaylistEdit,
 };

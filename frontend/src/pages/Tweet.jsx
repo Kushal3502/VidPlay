@@ -55,12 +55,12 @@ function Tweet() {
             {tweet?.owner._id == user.userData._id && (
               <div className=" flex justify-center items-center gap-2">
                 <Link to={`/edit/tweet/${tweetId}`}>
-                  <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
+                  <Button className="bg-green-700 hover:bg-green-800 font-semibold px-2 sm:px-4 py-2 rounded-md">
                     <Pencil />
                   </Button>
                 </Link>
                 <Button
-                  className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md"
+                  className="bg-red-600 hover:bg-red-700 font-semibold px-2 sm:px-4 py-2 rounded-md"
                   onClick={handleDelete}
                 >
                   <Trash2 />

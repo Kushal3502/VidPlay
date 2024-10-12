@@ -1,4 +1,4 @@
-import { Tweets, Videos } from "@/components";
+import { Playlist, Tweets, Videos } from "@/components";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -90,6 +90,11 @@ function Dashboard() {
           <div className="lg:px-6">
             <h2 className="lg:text-3xl mb-4">Tweets</h2>
             <Tweets userId={userData._id} />
+          </div>
+          <Separator className="my-4" />
+          <div className="lg:px-6">
+            <h2 className="lg:text-3xl mb-4">Playlists</h2>
+            <Playlist userId={userData._id} />
           </div>
         </div>
       )}

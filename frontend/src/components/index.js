@@ -11,6 +11,8 @@ import Videos from "./video/Videos";
 import Searchbox from "./Searchbox";
 import LikeButton from "./LikeButton";
 import SubscribeButton from "./SubscribeButton";
+import Playlist from "./playlist/Playlist";
+import PlaylistCard from "./playlist/PlaylistCard";
 
 export {
   Login,
@@ -26,4 +28,6 @@ export {
   Searchbox,
   LikeButton,
   SubscribeButton,
+  Playlist,
+  PlaylistCard,
 };
