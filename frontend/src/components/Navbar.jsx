@@ -13,8 +13,10 @@ import {
 import {
   AtSign,
   CirclePlus,
+  History,
   LogOut,
   ThumbsUp,
+  Twitter,
   User,
   Video,
 } from "lucide-react";
@@ -45,7 +47,7 @@ function Navbar() {
   };
 
   return (
-    <div className="flex flex-wrap justify-between items-end lg:py-4 lg:px-12 md:p-3 p-2 space-x-4">
+    <div className="flex flex-wrap justify-between items-end lg:py-4 lg:px-12 md:p-3 p-2 space-x-4 border-b border-slate-500">
       <Link to={"/"}>
         <img
           src="/Logo-removebg-preview.png"
@@ -104,6 +106,14 @@ function Navbar() {
               <DropdownMenuItem className="text-lg">
                 <ThumbsUp className="mr-2 h-4 w-4" />
                 <span onClick={() => navigate("/likes")}>Likes</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-lg">
+                <Twitter className="mr-2 h-4 w-4" />
+                <span onClick={() => navigate("/tweets")}>Tweets</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-lg">
+                <History className="mr-2 h-4 w-4" />
+                <span onClick={() => navigate("/history")}>History</span>
               </DropdownMenuItem>
               <DropdownMenuItem className="text-red-600 text-lg">
                 <LogOut className="mr-2 h-4 w-4" />

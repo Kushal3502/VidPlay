@@ -253,14 +253,15 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
   // get updated details
-  const { fullname, email } = req.body;
-
-  if (!fullname) throw new ApiError(400, "All fields are required");
+  const { fullname, watchHistory } = req.body;
 
   // find the user and returns the updated user details
   const updatedUserDetails = await User.findByIdAndUpdate(
     req.user?._id,
-    { $set: { fullname, email } },
+    {
+      $set: { fullname },
+      $push: { watchHistory: { $each: watchHistory } },
+    },
     { new: true }
   ).select("-password");
 
@@ -299,7 +300,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
     { new: true }
   ).select("-password");
 
-    console.log(updatedUser);
+  console.log(updatedUser);
 
   // return
   return res
@@ -339,7 +340,9 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   // return
   return res
     .status(200)
-    .json(new ApiResponse(200, updatedUser, "Cover image updated successfully."));
+    .json(
+      new ApiResponse(200, updatedUser, "Cover image updated successfully.")
+    );
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {

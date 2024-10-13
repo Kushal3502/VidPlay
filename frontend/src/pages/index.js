@@ -18,6 +18,7 @@ import VideoEdit from "./edit/VideoEdit";
 import TweetEdit from "./edit/TweetEdit";
 import Playlist from "./Playlist";
 import PlaylistEdit from "./edit/PlaylistEdit";
+import History from "./History";
 
 export {
   AuthLayout,
@@ -40,4 +41,5 @@ export {
   TweetEdit,
   Playlist,
   PlaylistEdit,
+  History,
 };

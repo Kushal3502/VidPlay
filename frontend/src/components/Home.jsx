@@ -1,7 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { VideoCard, Videos } from ".";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Videos } from ".";
 
 function Home() {
   return (

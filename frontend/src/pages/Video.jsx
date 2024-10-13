@@ -27,7 +27,6 @@ function Video() {
   const [video, setVideo] = useState(null);
   const [playlist, setPlaylist] = useState([]);
   const [subscribeStatus, setSubscribeStatus] = useState(false);
-  const [views, setViews] = useState(0);
 
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -42,6 +41,7 @@ function Video() {
       setVideo(response.data.data);
       console.log(response.data.data.views);
       updateViews(response.data.data.views + 1);
+      updateHistory()
     } catch (error) {
       console.log("Video fetch error :: ", error);
     }
@@ -60,6 +60,21 @@ function Video() {
       );
     } catch (error) {
       console.log("Update views error :: ", error);
+    }
+  };
+  const updateHistory = async () => {
+    try {
+      await axios.patch(
+        `http://127.0.0.1:8000/api/v1/users/update-account-details`,
+        {
+          watchHistory: [videoId],
+        },
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.log("Update history error :: ", error);
     }
   };
 
@@ -148,7 +163,7 @@ function Video() {
   }, [video]);
 
   return (
-    <div className="w-full lg:max-w-7xl flex flex-col p-4 lg:px-8">
+    <div className="w-full lg:max-w-5xl flex flex-col p-4 lg:px-8">
       {video ? (
         <div>
           <div className="rounded-lg overflow-hidden">
@@ -206,23 +221,26 @@ function Video() {
                         Playlists
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      {playlist && playlist.length > 0 ? (
-                        playlist.map((pl) => (
-                          <DropdownMenuItem
-                            key={pl._id}
-                            className="text-lg"
-                            onClick={() => addVideoToPlaylist(pl._id)}
-                          >
-                            {pl.name}
+                      {playlist && (
+                        <div>
+                          <div>
+                            {playlist.map((pl) => (
+                              <DropdownMenuItem
+                                key={pl._id}
+                                className="text-lg"
+                                onClick={() => addVideoToPlaylist(pl._id)}
+                              >
+                                {pl.name}
+                              </DropdownMenuItem>
+                            ))}
+                          </div>
+                          <DropdownMenuItem className="text-lg">
+                            <CirclePlus className="mr-2 h-4 w-4" />
+                            <span onClick={() => navigate("/upload/playlist")}>
+                              Create new playlist
+                            </span>
                           </DropdownMenuItem>
-                        ))
-                      ) : (
-                        <DropdownMenuItem className="text-lg">
-                          <CirclePlus className="mr-2 h-4 w-4" />
-                          <span onClick={() => navigate("/upload/playlist")}>
-                            Create new playlist
-                          </span>
-                        </DropdownMenuItem>
+                        </div>
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>

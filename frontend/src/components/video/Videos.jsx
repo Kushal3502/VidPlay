@@ -32,7 +32,7 @@ function Videos({ userId, query }) {
           {videos.map((video) => (
             <div
               key={video._id}
-              className=" transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+              className=" cursor-pointer"
             >
               <VideoCard video={video} />
             </div>

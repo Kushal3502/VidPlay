@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import {
   AtSign,
   CirclePlus,
+  History,
   House,
   LogOut,
   ThumbsUp,
@@ -12,13 +13,14 @@ import {
   User,
   Video,
 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/slices/authSlice";
 import axios from "axios";
 
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const authStatus = useSelector((state) => state.auth.status);
 
   const handleLogout = async () => {
     try {
@@ -72,25 +74,44 @@ function App() {
                     } `
                   }
                 >
-                  <Twitter className="h-6 w-6"/>
+                  <Twitter className="h-6 w-6" />
                   <span className="font-medium">Tweets</span>
                 </NavLink>
               </li>
-              <li className=" mb-2">
-                <NavLink
-                  to={"/likes"}
-                  className={({ isActive }) =>
-                    `flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl ${
-                      isActive
-                        ? "bg-amber-600 text-black"
-                        : "text-white hover:bg-zinc-800 "
-                    } `
-                  }
-                >
-                  <ThumbsUp className="h-6 w-6" />
-                  <span>Likes</span>
-                </NavLink>
-              </li>
+              {authStatus && (
+                <div>
+                  <li className=" mb-2">
+                    <NavLink
+                      to={"/likes"}
+                      className={({ isActive }) =>
+                        `flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl ${
+                          isActive
+                            ? "bg-amber-600 text-black"
+                            : "text-white hover:bg-zinc-800 "
+                        } `
+                      }
+                    >
+                      <ThumbsUp className="h-6 w-6" />
+                      <span>Likes</span>
+                    </NavLink>
+                  </li>
+                  <li className=" mb-2">
+                    <NavLink
+                      to={"/history"}
+                      className={({ isActive }) =>
+                        `flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl ${
+                          isActive
+                            ? "bg-amber-600 text-black"
+                            : "text-white hover:bg-zinc-800 "
+                        } `
+                      }
+                    >
+                      <History className="h-6 w-6" />
+                      <span>History</span>
+                    </NavLink>
+                  </li>
+                </div>
+              )}
             </div>
             <div>
               <li className=" mb-2">

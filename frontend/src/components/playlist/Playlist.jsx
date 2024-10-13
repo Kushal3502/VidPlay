@@ -27,10 +27,7 @@ function Playlist({ userId }) {
       {playlist && playlist.length > 0 ? (
         <div className="grid lg:grid-cols-4 sm:grid-col-2 grid-col-1 gap-3">
           {playlist.map((item) => (
-            <div
-              key={item._id}
-              className=" rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"
-            >
+            <div key={item._id} className=" rounded-lg cursor-pointer">
               <PlaylistCard playlist={item} />
             </div>
           ))}

@@ -39,7 +39,7 @@ function VideoCard({ video }) {
     <div className="border border-zinc-800 hover:bg-zinc-800 rounded-lg p-2 h-full flex flex-col">
       <Link to={`/video/${video?._id}`}>
         <AspectRatio ratio={16 / 9} className="rounded-lg mb-2 overflow-hidden">
-          <img src={video?.thumbnail} className=" " />
+          <img src={video?.thumbnail} className="" />
         </AspectRatio>
         <div className="flex items-between justify-start px-2 lg:gap-4 gap-2">
           <img

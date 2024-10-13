@@ -51,7 +51,7 @@ function Likes() {
                 {videos.map((video) => (
                   <div
                     key={video._id}
-                    className=" transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+                    className="cursor-pointer"
                   >
                     <VideoCard video={video.video} />
                   </div>
@@ -69,7 +69,7 @@ function Likes() {
                 {tweets.map((tweet) => (
                   <div
                     key={tweet._id}
-                    className=" transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+                    className="cursor-pointer"
                   >
                     <TweetCard tweet={tweet.tweet} />
                   </div>

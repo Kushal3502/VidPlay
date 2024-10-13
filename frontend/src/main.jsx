@@ -9,6 +9,7 @@ import {
   Channel,
   Dashboard,
   EditLayout,
+  History,
   Home,
   Layout,
   Likes,
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "likes",
         element: <Likes />,
+      },
+      {
+        path: "history",
+        element: <History />,
       },
       {
         path: "video/:videoId",

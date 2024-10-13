@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useToast } from "@/hooks/use-toast";
 
 function Playlist() {
   const { playlistId } = useParams();
@@ -20,6 +21,8 @@ function Playlist() {
   const user = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
+
+  const { toast } = useToast();
 
   const fetchPlaylist = async () => {
     try {
@@ -42,6 +45,9 @@ function Playlist() {
         }
       );
       navigate("/");
+      toast({
+        description: "Playlist deleted.",
+      })
     } catch (error) {
       console.log("Playlist delete error :: ", error);
     }
@@ -86,10 +92,6 @@ function Playlist() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          {/* <h2 className="text-2xl">Description</h2>
-          <p className="mt-2 text-gray-600 text-justify">
-            {playlist?.description}
-          </p> */}
         </div>
       </div>
       <div>
@@ -98,7 +100,7 @@ function Playlist() {
             {playlist.videos.map((video) => (
               <div
                 key={video._id}
-                className="transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+                className="cursor-pointer"
               >
                 <VideoCard video={video} />
               </div>
