@@ -137,7 +137,7 @@ function App() {
             </div>
           </ul>
         </div>
-        <div className="ml-[13%] w-full flex-1 overflow-y-auto p-4">
+        <div className="lg:ml-[13%] w-full flex-1 overflow-y-auto p-4">
           <Outlet />
         </div>
       </div>
