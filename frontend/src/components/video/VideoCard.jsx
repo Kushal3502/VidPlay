@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { AspectRatio } from "../ui/aspect-ratio";
 
 function VideoCard({ video }) {
   const [duration, setDuration] = useState();
@@ -35,11 +36,12 @@ function VideoCard({ video }) {
   }, []);
 
   return (
-    <div className="border border-zinc-600 rounded-lg p-2 h-full flex flex-col">
+    <div className="border border-zinc-800 hover:bg-zinc-800 rounded-lg p-2 h-full flex flex-col">
       <Link to={`/video/${video?._id}`}>
-        <img src={video?.thumbnail} className=" rounded-lg mb-2 " />
+        <AspectRatio ratio={16 / 9} className="rounded-lg mb-2 overflow-hidden">
+          <img src={video?.thumbnail} className=" " />
+        </AspectRatio>
         <div className="flex items-between justify-start px-2 lg:gap-4 gap-2">
-          {/* <div className="flex items-start lg:gap-4 gap-2"> */}
           <img
             src={video?.owner.avatar}
             className=" lg:w-10 lg:h-10 sm:h-10 sm:w-10 w-8 h-8 rounded-full object-cover"
@@ -48,7 +50,6 @@ function VideoCard({ video }) {
             <p className="">{video?.title}</p>
             <p className=" text-gray-400">{video?.owner.username}</p>
           </div>
-          {/* </div> */}
         </div>
         <div className=" flex justify-start gap-4 lg:pl-16 pl-12">
           <p className=" text-gray-400">{video?.views} views</p>
