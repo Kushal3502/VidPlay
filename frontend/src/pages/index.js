@@ -2,7 +2,7 @@ import AuthLayout from "./auth/AuthLayout";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import Home from "./home/Home";
-import HomeVideo from "./home/HomeVideo";
+import Tweets from "./home/Tweets";
 import Video from "./Video";
 import Channel from "./Channel";
 import Dashboard from "./Dashboard";
@@ -24,6 +24,7 @@ export {
   Login,
   Register,
   Home,
+  Tweets,
   Video,
   Channel,
   Dashboard,

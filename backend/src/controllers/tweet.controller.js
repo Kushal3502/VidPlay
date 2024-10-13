@@ -36,6 +36,50 @@ const createTweet = asyncHandler(async (req, res) => {
   return res.status(201).json(new ApiResponse(200, newTweet));
 });
 
+// get all tweets
+const getAllTweets = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  const tweets = await Tweet.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              username: 1,
+              fullname: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$owner",
+    },
+    {
+      $sort: { createdAt: -1 }, // Sort by the latest tweets
+    },
+    {
+      $skip: (page - 1) * limit, // Pagination: skip previous pages
+    },
+    {
+      $limit: parseInt(limit), // Limit the number of results per page
+    },
+  ]);
+
+  if (!tweets || tweets.length === 0)
+    throw new ApiError(404, "No tweets found");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweets, "Tweets fetched successfully"));
+});
+
 // get tweet by id
 const getTweetById = asyncHandler(async (req, res) => {
   const { tweetId } = req.params;
@@ -214,4 +258,11 @@ const deleteTweet = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "Tweet deleted..."));
 });
 
-export { createTweet, getTweetById, getUserTweets, updateTweet, deleteTweet };
+export {
+  createTweet,
+  getAllTweets,
+  getTweetById,
+  getUserTweets,
+  updateTweet,
+  deleteTweet,
+};

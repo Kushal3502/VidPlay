@@ -29,7 +29,7 @@ function Tweets({ userId }) {
           {tweets.map((tweet) => (
             <div
               key={tweet._id}
-              className=" rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+              className=" rounded-lg cursor-pointer"
             >
               <TweetCard tweet={tweet} />
             </div>

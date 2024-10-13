@@ -21,6 +21,7 @@ import {
   Tweet,
   TweetEdit,
   TweetUpload,
+  Tweets,
   Video,
   VideoEdit,
   VideoUpload,
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "tweets",
+        element: <Tweets />,
       },
       {
         path: "likes",
