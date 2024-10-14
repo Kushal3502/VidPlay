@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slices/authSlice";
+import { ScaleLoader } from "react-spinners";
+import { useToast } from "@/hooks/use-toast";
 
 function Login() {
   const {
@@ -17,9 +19,13 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [loader, setLoader] = useState(false);
+
+  const { toast } = useToast();
+
   const handleLogin = async (data) => {
     console.log(data);
-
+    setLoader(true);
     const config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -36,6 +42,12 @@ function Login() {
       console.log("Response:", response.data);
       dispatch(login(response.data.data.user));
       navigate("/");
+      setLoader(false);
+      toast({
+        description: "🎊 Welcome back!!!",
+        className:
+          "bg-amber-600 font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
     } catch (error) {
       console.error("Error:", error);
     }
@@ -43,87 +55,92 @@ function Login() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
-      <div className="p-8 shadow-md rounded-xl max-w-screen-md w-full border-2 border-white">
-        <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl mb-8 font-mono">
-          Welcome back
-        </h2>
-        <form
-          onSubmit={handleSubmit(handleLogin)}
-          className="grid grid-cols-1 gap-5"
-        >
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+      {loader ? (
+        <div>
+          <ScaleLoader color="#ffffff" />
+        </div>
+      ) : (
+        <div className="p-8 shadow-md rounded-xl max-w-screen-md w-full border-2 border-white">
+          <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl mb-8 font-mono">
+            Welcome back
+          </h2>
+          <form
+            onSubmit={handleSubmit(handleLogin)}
+            className="grid grid-cols-1 gap-5"
+          >
+            <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  id="email"
+                  placeholder="Email"
+                  className="text-black w-full"
+                  {...register("email", {
+                    pattern: {
+                      value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                      message: "Invalid email address!!!",
+                    },
+                  })}
+                />
+                {errors.email && (
+                  <div className="text-red-500">{errors.email.message}</div>
+                )}
+              </div>
+              <p>or</p>
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  type="text"
+                  id="username"
+                  placeholder="Username"
+                  className="text-black w-full"
+                  {...register("username")}
+                />
+                {errors.username && (
+                  <div className="text-red-500">{errors.username.message}</div>
+                )}
+              </div>
+            </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
-                type="email"
-                id="email"
-                placeholder="Email"
+                type="password"
+                id="password"
+                placeholder="Password"
                 className="text-black w-full"
-                {...register("email", {
-                  pattern: {
-                    value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-                    message: "Invalid email address!!!",
+                {...register("password", {
+                  minLength: {
+                    value: 5,
+                    message: "Password must be at least 5 characters long!!!",
                   },
                 })}
               />
-              {errors.email && (
-                <div className="text-red-500">{errors.email.message}</div>
+              {errors.password && (
+                <div className="text-red-500">{errors.password.message}</div>
               )}
             </div>
-            <p>or</p>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                type="text"
-                id="username"
-                placeholder="Username"
-                className="text-black w-full"
-                {...register("username")}
-              />
-              {errors.username && (
-                <div className="text-red-500">{errors.username.message}</div>
-              )}
-            </div>
-          </div>
 
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              placeholder="Password"
-              className="text-black w-full"
-              {...register("password", {
-                minLength: {
-                  value: 5,
-                  message: "Password must be at least 5 characters long!!!",
-                },
-              })}
-            />
-            {errors.password && (
-              <div className="text-red-500">{errors.password.message}</div>
-            )}
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
-            <Button
-              variant="destructive"
-              className="w-full md:w-3/6 bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base"
-            >
-              Login
-            </Button>
-            <p className="text-center md:text-left">
-              Don't have an account?
-              <Link
-                to="/auth/register"
-                className="text-blue-500 underline ml-2"
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+              <Button
+                variant="destructive"
+                className="w-full md:w-3/6 bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base"
               >
-                Register
-              </Link>
-            </p>
-          </div>
-        </form>
-      </div>
+                Login
+              </Button>
+              <p className="text-center md:text-left">
+                Don't have an account?
+                <Link
+                  to="/auth/register"
+                  className="text-blue-500 underline ml-2"
+                >
+                  Register
+                </Link>
+              </p>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

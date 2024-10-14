@@ -41,7 +41,7 @@ function Video() {
       setVideo(response.data.data);
       console.log(response.data.data.views);
       updateViews(response.data.data.views + 1);
-      updateHistory()
+      updateHistory();
     } catch (error) {
       console.log("Video fetch error :: ", error);
     }
@@ -111,7 +111,11 @@ function Video() {
         {},
         { withCredentials: true }
       );
-      toast({ description: "Video added successfully" });
+      toast({
+        description: " ✅Video added successfully",
+        className:
+          "bg-amber-600 font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
     } catch (error) {
       console.log("Video add error :: ", error);
       toast({
