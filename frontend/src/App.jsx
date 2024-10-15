@@ -11,15 +11,18 @@ import {
   ThumbsUp,
   Twitter,
   User,
+  UserCheck,
   Video,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/slices/authSlice";
 import axios from "axios";
+import { useToast } from "./hooks/use-toast";
 
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { toast } = useToast();
   const authStatus = useSelector((state) => state.auth.status);
 
   const handleLogout = async () => {
@@ -31,6 +34,12 @@ function App() {
       );
       console.log(response);
       dispatch(logout());
+      toast({
+        description: "🔴 Logged out!!!",
+        className:
+          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
+
       navigate("/auth/login");
     } catch (error) {
       console.log("Logout error :: ", error);
@@ -93,6 +102,21 @@ function App() {
                     >
                       <ThumbsUp className="h-6 w-6" />
                       <span>Likes</span>
+                    </NavLink>
+                  </li>
+                  <li className=" mb-2">
+                    <NavLink
+                      to={"/subscriptions"}
+                      className={({ isActive }) =>
+                        `flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl ${
+                          isActive
+                            ? "bg-amber-600 text-black"
+                            : "text-white hover:bg-zinc-800 "
+                        } `
+                      }
+                    >
+                      <UserCheck className="h-6 w-6" />
+                      <span>Subscriptions</span>
                     </NavLink>
                   </li>
                   <li className=" mb-2">
