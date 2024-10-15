@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { PlaylistCard } from "..";
-import axios from "axios";
+import { get } from "@/utils/api";
 
 function Playlist({ userId }) {
   const [playlist, setPlaylist] = useState();
 
   const fetchUserPlaylists = async () => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/v1/playlist/user/${userId}`,
-        { withCredentials: true }
-      );
-      setPlaylist(response.data.data);
-      console.log(response.data.data);
+      const response = await get(`/playlist/user/${userId}`);
+      console.log(response.data);
+      setPlaylist(response.data);
     } catch (error) {
       console.log("Playlist fetch error :: ", error);
     }
