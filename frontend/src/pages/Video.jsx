@@ -112,9 +112,9 @@ function Video() {
         { withCredentials: true }
       );
       toast({
-        description: " ✅Video added successfully",
+        description: "🟢 Video added successfully",
         className:
-          "bg-amber-600 font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+          "bg-zinc-900 text-white font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
       });
     } catch (error) {
       console.log("Video add error :: ", error);

@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
@@ -6,6 +7,7 @@ import { useSelector } from "react-redux";
 function LikeButton({ video, tweet, comment }) {
   const [isLiked, setIsLiked] = useState(false);
   const user = useSelector((state) => state.auth);
+  const { toast } = useToast();
 
   let url;
 
@@ -24,7 +26,7 @@ function LikeButton({ video, tweet, comment }) {
       }
     } else if (tweet) {
       const idx = tweet.likes.findIndex(
-        (like) => like.likedBy === user.userData._id
+        (like) => like.likedBy === user?.userData._id
       );
       if (idx !== -1) {
         setIsLiked(true);
@@ -43,6 +45,19 @@ function LikeButton({ video, tweet, comment }) {
     try {
       const response = await axios.post(url, {}, { withCredentials: true });
       console.log(response.data);
+      if (isLiked) {
+        toast({
+          description: "🔴 Like removed",
+          className:
+            "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+        });
+      } else {
+        toast({
+          description: "🟢 Liked!!!",
+          className:
+            "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+        });
+      }
       setIsLiked((prevStatus) => !prevStatus);
     } catch (error) {
       console.log("Like failed:", error);

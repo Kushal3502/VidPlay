@@ -19,6 +19,7 @@ import TweetEdit from "./edit/TweetEdit";
 import Playlist from "./Playlist";
 import PlaylistEdit from "./edit/PlaylistEdit";
 import History from "./History";
+import Subscriptions from "./Subscriptions";
 
 export {
   AuthLayout,
@@ -42,4 +43,5 @@ export {
   Playlist,
   PlaylistEdit,
   History,
+  Subscriptions,
 };

@@ -18,38 +18,39 @@ function Login() {
   } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [loader, setLoader] = useState(false);
-
   const { toast } = useToast();
 
   const handleLogin = async (data) => {
     console.log(data);
     setLoader(true);
-    const config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "http://127.0.0.1:8000/api/v1/users/login",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data,
-      withCredentials: true,
-    };
 
     try {
-      const response = await axios.request(config);
-      console.log("Response:", response.data);
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/users/login",
+        data,
+        { withCredentials: true }
+      );
+      console.log("Response:", response.data.success);
       dispatch(login(response.data.data.user));
-      navigate("/");
-      setLoader(false);
-      toast({
-        description: "🎊 Welcome back!!!",
-        className:
-          "bg-amber-600 font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
-      });
+
+      if (response.data.success) {
+        navigate("/");
+        toast({
+          description: "🎊 Welcome back!!!",
+          className:
+            "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+        });
+      }
     } catch (error) {
       console.error("Error:", error);
+      toast({
+        description: "🔴 Invalid credentials!!!",
+        className:
+          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -65,7 +66,7 @@ function Login() {
             Welcome back
           </h2>
           <form
-            onSubmit={handleSubmit(handleLogin)}
+            onSubmit={handleSubmit(handleLogin)} // Handle form submission here
             className="grid grid-cols-1 gap-5"
           >
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
@@ -120,7 +121,6 @@ function Login() {
                 <div className="text-red-500">{errors.password.message}</div>
               )}
             </div>
-
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
               <Button
                 variant="destructive"

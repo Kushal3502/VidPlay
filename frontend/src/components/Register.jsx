@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 function Register() {
   const {
@@ -14,6 +15,7 @@ function Register() {
     formState: { errors, isSubmitting },
   } = useForm();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleRegister = async (data) => {
     let userInfo = new FormData();
@@ -25,16 +27,18 @@ function Register() {
     userInfo.append("coverImage", data.coverImage[0]);
     userInfo.append("password", data.password);
 
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "http://127.0.0.1:8000/api/v1/users/register",
-      data: userInfo,
-    };
-
     try {
-      const response = await axios.request(config);
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/users/register",
+        userInfo
+      );
       console.log(response.data);
+      toast({
+        description: "🟢 Account created!!!",
+        className:
+          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
+
       navigate("/auth/login");
     } catch (error) {
       console.log(error);
@@ -127,8 +131,8 @@ function Register() {
               }`}
               {...register("password", {
                 minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters long!",
+                  value: 5,
+                  message: "Password must be at least 5 characters long!",
                 },
               })}
             />

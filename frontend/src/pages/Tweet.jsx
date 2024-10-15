@@ -41,7 +41,7 @@ function Tweet() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto lg:my-8 my-4 lg:p-4 border border-zinc-600 rounded-lg">
+    <div className="max-w-2xl mx-auto lg:my-8 my-4 p-4 border border-zinc-600 rounded-lg">
       {tweet && (
         <div>
           <div className=" flex justify-between items-start">
@@ -52,7 +52,7 @@ function Tweet() {
               />
               <h2 className=" lg:text-xl">{tweet?.owner.username}</h2>
             </div>
-            {tweet?.owner._id == user.userData._id && (
+            {user && tweet?.owner._id == user.userData._id && (
               <div className=" flex justify-center items-center gap-2">
                 <Link to={`/edit/tweet/${tweetId}`}>
                   <Button className="bg-green-700 hover:bg-green-800 font-semibold px-2 sm:px-4 py-2 rounded-md">

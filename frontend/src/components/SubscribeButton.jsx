@@ -1,19 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function SubscribeButton() {
+function SubscribeButton({ authStatus, owner, subscribeStatus }) {
+  const [status, setStatus] = useState(subscribeStatus);
+  const navigate = useNavigate();
+  console.log(status);
+  const toggleSubscription = async () => {
+    try {
+      await axios.post(
+        `http://127.0.0.1:8000/api/v1/subscriptions/c/${owner}`,
+        {},
+        { withCredentials: true }
+      );
+      setStatus((prevStatus) => !prevStatus);
+    } catch (error) {
+      console.log("Subscription error :: ", error);
+    }
+  };
+
   return (
     <Button
       onClick={() => {
-        if (user.status) {
+        if (authStatus) {
           toggleSubscription();
         } else {
           navigate("/auth/login");
         }
       }}
-      className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md"
+      className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base px-4 py-2 rounded-md"
     >
-      {subscribeStatus ? "Subscribed" : "Subscribe"}
+      {authStatus
+        ? status
+          ? "Subscribed"
+          : "Subscribe"
+        : "Login to Subscribe"}
     </Button>
   );
 }
