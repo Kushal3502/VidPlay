@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
@@ -6,22 +5,24 @@ import { CommentCard } from "..";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { get, post } from "@/utils/api";
 
 function Comment({ tweetId, videoId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const authStatus = useSelector((state) => state.auth.status);
   const navigate = useNavigate();
-  const {toast} = useToast()
+  const { toast } = useToast();
 
   const url = tweetId
-    ? `http://127.0.0.1:8000/api/v1/comments/tweet/${tweetId}`
-    : `http://127.0.0.1:8000/api/v1/comments/video/${videoId}`;
+    ? `/comments/tweet/${tweetId}`
+    : `/comments/video/${videoId}`;
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(url);
-      setComments(response.data.data);
+      const response = await get(url, {}, false);
+      console.log(response.data);
+      setComments(response.data);
     } catch (error) {
       console.log("Comment fetch error :: ", error);
     }
@@ -29,19 +30,19 @@ function Comment({ tweetId, videoId }) {
 
   const addComment = async (e) => {
     e.preventDefault();
+
     if (!newComment.trim()) return;
+
     try {
-      const response = await axios.post(
-        url,
-        { content: newComment },
-        { withCredentials: true }
-      );
+      const response = await post(url, { content: newComment });
+      console.log(response);
+
       toast({
         description: "🟢 Comment added!!!",
         className:
           "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
       });
-      setComments([...comments, response.data.data]);
+      setComments([...comments, response.data]);
       setNewComment("");
     } catch (error) {
       console.log("Add comment error :: ", error);
