@@ -19,13 +19,9 @@ function Comment({ tweetId, videoId }) {
     : `/comments/video/${videoId}`;
 
   const fetchComments = async () => {
-    try {
-      const response = await get(url, {}, false);
-      console.log(response.data);
-      setComments(response.data);
-    } catch (error) {
-      console.log("Comment fetch error :: ", error);
-    }
+    const response = await get(url, {}, false);
+    console.log(response.data);
+    setComments(response.data);
   };
 
   const addComment = async (e) => {
@@ -33,20 +29,16 @@ function Comment({ tweetId, videoId }) {
 
     if (!newComment.trim()) return;
 
-    try {
-      const response = await post(url, { content: newComment });
-      console.log(response);
+    const response = await post(url, { content: newComment });
+    console.log(response);
 
-      toast({
-        description: "🟢 Comment added!!!",
-        className:
-          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
-      });
-      setComments([...comments, response.data]);
-      setNewComment("");
-    } catch (error) {
-      console.log("Add comment error :: ", error);
-    }
+    toast({
+      description: "🟢 Comment added!!!",
+      className:
+        "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+    });
+    setComments([...comments, response.data]);
+    setNewComment("");
   };
 
   useEffect(() => {

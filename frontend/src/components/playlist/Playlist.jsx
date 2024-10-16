@@ -6,13 +6,9 @@ function Playlist({ userId }) {
   const [playlist, setPlaylist] = useState();
 
   const fetchUserPlaylists = async () => {
-    try {
-      const response = await get(`/playlist/user/${userId}`);
-      console.log(response.data);
-      setPlaylist(response.data);
-    } catch (error) {
-      console.log("Playlist fetch error :: ", error);
-    }
+    const response = await get(`/playlist/user/${userId}`);
+    console.log(response.data);
+    setPlaylist(response.data);
   };
 
   useEffect(() => {
