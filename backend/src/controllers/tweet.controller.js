@@ -16,19 +16,26 @@ const createTweet = asyncHandler(async (req, res) => {
   if (!content || content.toLowerCase().trim() === "")
     throw new ApiError(400, "Content is required!!!");
 
+  let tweetImage = "";
+
   const tweetImageLocalPath = req.file?.path;
 
-  let newTweetImage;
   if (tweetImageLocalPath) {
-    newTweetImage = await uploadOnCloudinary(tweetImageLocalPath);
+    // If image is uploaded, upload to Cloudinary
+    const uploadedImage = await uploadOnCloudinary(tweetImageLocalPath);
 
-    if (!newTweetImage) throw new ApiError(400, "Upload failed!!!");
+    if (!uploadedImage) {
+      throw new ApiError(400, "Image upload failed!!!");
+    }
+
+    // Set tweetImage URL if upload succeeds
+    tweetImage = uploadedImage.url;
   }
 
   const newTweet = await Tweet.create({
     owner: req.user?._id,
     content,
-    tweetImage: newTweetImage.url || "",
+    tweetImage,
   });
 
   if (!newTweet) throw new ApiError(400, "Something went wrong!!!");

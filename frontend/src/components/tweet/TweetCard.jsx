@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { AspectRatio } from "../ui/aspect-ratio";
 
 function TweetCard({ tweet }) {
   return (
@@ -16,9 +15,6 @@ function TweetCard({ tweet }) {
           </h1>
         </div>
         <p className="lg:text-lg mb-2">{tweet.content}</p>
-        {/* <AspectRatio ratio={16 / 9} className="rounded-lg mb-2 overflow-hidden">
-          <img src={tweet.tweetImage} className="" />
-        </AspectRatio> */}
       </Link>
     </div>
   );
