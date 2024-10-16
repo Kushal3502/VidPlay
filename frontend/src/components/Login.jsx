@@ -14,7 +14,6 @@ function Login() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -49,9 +48,6 @@ function Login() {
       setLoader(false);
     }
   };
-
-  const email = watch("email");
-  const password = watch("password");
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">

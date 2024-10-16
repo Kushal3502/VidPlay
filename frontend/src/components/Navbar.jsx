@@ -20,30 +20,28 @@ import {
   User,
   Video,
 } from "lucide-react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/authSlice";
 import { Searchbox } from ".";
+import { post } from "@/utils/api";
+import { useToast } from "@/hooks/use-toast";
 
 function Navbar() {
   const navigate = useNavigate();
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
-  console.log(userData);
   const handleLogout = async () => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/users/logout",
-        {},
-        { withCredentials: true }
-      );
-      console.log(response);
-      dispatch(logout());
-      navigate("/auth/login");
-    } catch (error) {
-      console.log("Logout error :: ", error);
-    }
+    const response = await post("/users/logout");
+    console.log(response);
+    dispatch(logout());
+    toast({
+      description: "🔴 Logged out!!!",
+      className:
+        "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+    });
+    navigate("/auth/login");
   };
 
   return (
