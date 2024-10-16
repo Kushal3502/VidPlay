@@ -1,21 +1,15 @@
-import axios from "axios";
+import { get } from "@/utils/api";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ScaleLoader } from "react-spinners";
 
 function Subscriptions() {
   const [subscriptions, setSubscriptions] = useState();
 
   const fetchSubscriptions = async () => {
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/v1/subscriptions/",
-        { withCredentials: true }
-      );
-      console.log(response.data.data.followings);
-      setSubscriptions(response.data.data.followings);
-    } catch (error) {
-      console.log("Subscription fetch error :: ", error);
-    }
+    const response = await get("/subscriptions/");
+    console.log(response.data.followings);
+    setSubscriptions(response.data.followings);
   };
 
   useEffect(() => {
@@ -25,9 +19,9 @@ function Subscriptions() {
   return (
     <div className="p-4">
       <h2 className="lg:text-3xl mb-4">Subscriptions</h2>
-      <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
-        {subscriptions &&
-          subscriptions.map((item) => (
+      {subscriptions ? (
+        <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
+          {subscriptions.map((item) => (
             <Link to={`/users/channel/${item.channelDetails.username}`}>
               <div
                 key={item.channelDetails._id}
@@ -44,7 +38,12 @@ function Subscriptions() {
               </div>
             </Link>
           ))}
-      </div>
+        </div>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <ScaleLoader color="#ffffff" />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import { VideoCard } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -14,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
 import { ScaleLoader } from "react-spinners";
+import { del, get } from "@/utils/api";
 
 function Playlist() {
   const { playlistId } = useParams();
@@ -26,36 +26,28 @@ function Playlist() {
   const { toast } = useToast();
 
   const fetchPlaylist = async () => {
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/v1/playlist/${playlistId}`
-      );
-      setPlaylist(response.data.data[0]);
-      console.log(response.data.data.videos);
-    } catch (error) {
-      console.log("Playlist fetch error :: ", error);
-    }
+    setLoader(true);
+
+    const response = await get(`/playlist/${playlistId}`);
+    setPlaylist(response.data[0]);
+    console.log(response.data.videos);
+
+    setLoader(false);
   };
 
   const handleDelete = async () => {
     setLoader(true);
-    try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/v1/playlist/${playlistId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      navigate("/");
-      setLoader(false);
-      toast({
-        description: "🗑️ Playlist deleted.",
-        className:
-          "bg-amber-600 font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
-      });
-    } catch (error) {
-      console.log("Playlist delete error :: ", error);
-    }
+
+    await del(`/playlist/${playlistId}`);
+
+    navigate("/");
+    setLoader(false);
+
+    toast({
+      description: "🗑️ Playlist deleted.",
+      className:
+        "bg-zinc-900 text-white font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+    });
   };
 
   useEffect(() => {
