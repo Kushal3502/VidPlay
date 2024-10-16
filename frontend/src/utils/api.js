@@ -30,7 +30,7 @@ export const post = async (endpoint, data = {}, auth = true) => {
 
 export const patch = async (endpoint, data = {}, auth = true) => {
   try {
-    const response = await patch.get(endpoint, data, {
+    const response = await api.patch(endpoint, data, {
       withCredentials: auth,
     });
     return response.data;
