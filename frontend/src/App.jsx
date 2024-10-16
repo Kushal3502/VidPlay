@@ -3,8 +3,6 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Navbar } from "./components";
 import { Toaster } from "@/components/ui/toaster";
 import {
-  AtSign,
-  CirclePlus,
   History,
   House,
   LogOut,
@@ -12,12 +10,11 @@ import {
   Twitter,
   User,
   UserCheck,
-  Video,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/slices/authSlice";
-import axios from "axios";
 import { useToast } from "./hooks/use-toast";
+import { post } from "./utils/api";
 
 function App() {
   const navigate = useNavigate();
@@ -26,24 +23,18 @@ function App() {
   const authStatus = useSelector((state) => state.auth.status);
 
   const handleLogout = async () => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/users/logout",
-        {},
-        { withCredentials: true }
-      );
-      console.log(response);
-      dispatch(logout());
-      toast({
-        description: "🔴 Logged out!!!",
-        className:
-          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
-      });
+    const response = await post("/users/logout");
+    console.log(response);
 
-      navigate("/auth/login");
-    } catch (error) {
-      console.log("Logout error :: ", error);
-    }
+    dispatch(logout());
+
+    toast({
+      description: "🔴 Logged out!!!",
+      className:
+        "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+    });
+
+    navigate("/auth/login");
   };
 
   useEffect(() => {
