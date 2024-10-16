@@ -4,37 +4,34 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slices/authSlice";
 import { ScaleLoader } from "react-spinners";
 import { useToast } from "@/hooks/use-toast";
+import { post } from "@/utils/api";
 
 function Login() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    mode: "onChange",
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
   const { toast } = useToast();
 
   const handleLogin = async (data) => {
-    console.log(data);
     setLoader(true);
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/users/login",
-        data,
-        { withCredentials: true }
-      );
-      console.log("Response:", response.data.success);
-      dispatch(login(response.data.data.user));
+      const response = await post("/users/login", data);
+      dispatch(login(response.data.user));
 
-      if (response.data.success) {
+      if (response.success) {
         navigate("/");
         toast({
           description: "🎊 Welcome back!!!",
@@ -43,7 +40,6 @@ function Login() {
         });
       }
     } catch (error) {
-      console.error("Error:", error);
       toast({
         description: "🔴 Invalid credentials!!!",
         className:
@@ -53,6 +49,9 @@ function Login() {
       setLoader(false);
     }
   };
+
+  const email = watch("email");
+  const password = watch("password");
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
@@ -66,7 +65,7 @@ function Login() {
             Welcome back
           </h2>
           <form
-            onSubmit={handleSubmit(handleLogin)} // Handle form submission here
+            onSubmit={handleSubmit(handleLogin)}
             className="grid grid-cols-1 gap-5"
           >
             <div className="flex flex-col md:flex-row justify-center items-center gap-4">
@@ -98,9 +97,6 @@ function Login() {
                   className="text-black w-full"
                   {...register("username")}
                 />
-                {errors.username && (
-                  <div className="text-red-500">{errors.username.message}</div>
-                )}
               </div>
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">

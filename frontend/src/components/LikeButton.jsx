@@ -1,5 +1,5 @@
 import { useToast } from "@/hooks/use-toast";
-import axios from "axios";
+import { post } from "@/utils/api";
 import React, { useEffect, useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { useSelector } from "react-redux";
@@ -8,13 +8,6 @@ function LikeButton({ video, tweet, comment }) {
   const [isLiked, setIsLiked] = useState(false);
   const user = useSelector((state) => state.auth);
   const { toast } = useToast();
-
-  let url;
-
-  if (video) url = `http://127.0.0.1:8000/api/v1/likes/toggle/v/${video._id}`;
-  else if (tweet)
-    url = `http://127.0.0.1:8000/api/v1/likes/toggle/t/${tweet._id}`;
-  else url = `http://127.0.0.1:8000/api/v1/likes/toggle/c/${comment._id}`;
 
   const likeStatus = async () => {
     if (video) {
@@ -42,27 +35,34 @@ function LikeButton({ video, tweet, comment }) {
   };
 
   const toggleLike = async () => {
-    try {
-      const response = await axios.post(url, {}, { withCredentials: true });
-      console.log(response.data);
-      if (isLiked) {
-        toast({
-          description: "🔴 Like removed",
-          className:
-            "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
-        });
-      } else {
-        toast({
-          description: "🟢 Liked!!!",
-          className:
-            "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
-        });
-      }
-      setIsLiked((prevStatus) => !prevStatus);
-    } catch (error) {
-      console.log("Like failed:", error);
-      setIsLiked((prevStatus) => !prevStatus);
+    let url;
+
+    if (video) {
+      url = `/likes/toggle/v/${video._id}`;
+    } else if (tweet) {
+      url = `/likes/toggle/t/${tweet._id}`;
+    } else {
+      url = `/likes/toggle/c/${comment._id}`;
     }
+
+    const response = await post(url);
+    console.log(response);
+
+    if (isLiked) {
+      toast({
+        description: "🔴 Like removed",
+        className:
+          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
+    } else {
+      toast({
+        description: "🟢 Liked!!!",
+        className:
+          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
+    }
+
+    setIsLiked((prevStatus) => !prevStatus);
   };
 
   useEffect(() => {

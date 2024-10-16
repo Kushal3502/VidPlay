@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import TweetCard from "./TweetCard";
 import { get } from "@/utils/api";
