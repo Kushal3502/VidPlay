@@ -40,7 +40,7 @@ function Playlist() {
 
     await del(`/playlist/${playlistId}`);
 
-    navigate("/");
+    navigate("/dashboard");
     setLoader(false);
 
     toast({

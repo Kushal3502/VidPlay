@@ -4,7 +4,7 @@ import { AspectRatio } from "../ui/aspect-ratio";
 
 function TweetCard({ tweet }) {
   return (
-    <div className="border border-zinc-800 hover:bg-zinc-800 rounded-lg p-2 h-full">
+    <div className="border border-zinc-800 hover:bg-zinc-800 rounded-lg p-4 h-full">
       <Link to={`/tweet/${tweet._id}`}>
         <div className=" flex items-center gap-2 mb-2">
           <img
@@ -16,9 +16,9 @@ function TweetCard({ tweet }) {
           </h1>
         </div>
         <p className="lg:text-lg mb-2">{tweet.content}</p>
-        <AspectRatio ratio={16 / 9} className="rounded-lg mb-2 overflow-hidden">
+        {/* <AspectRatio ratio={16 / 9} className="rounded-lg mb-2 overflow-hidden">
           <img src={tweet.tweetImage} className="" />
-        </AspectRatio>
+        </AspectRatio> */}
       </Link>
     </div>
   );

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import axios from "axios";
+import { post } from "@/utils/api";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
@@ -13,38 +13,31 @@ function PlaylistUpload() {
   const [loader, setLoader] = useState(false);
 
   const navigate = useNavigate();
-
   const { toast } = useToast();
 
   const handlePlaylist = async (e) => {
     e.preventDefault();
     setLoader(true);
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/playlist/",
-        {
-          name,
-          description,
-        },
-        { withCredentials: true }
-      );
-      navigate("/");
-      setLoader(false);
-      toast({
-        description: " ✅Playlist created successfully",
-        className:
-          "bg-amber-600 font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.log("Post error :: ", error);
-    }
+
+    await post("/playlist/", {
+      name,
+      description,
+    });
+
+    navigate("/");
+    setLoader(false);
+
+    toast({
+      description: "🟢Playlist created",
+      className:
+        "bg-zinc-900 text-white font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+    });
   };
 
   return (
     <>
       {loader ? (
-        <div>
+        <div className=" h-full flex justify-center items-center">
           <ScaleLoader color="#ffffff" />
         </div>
       ) : (

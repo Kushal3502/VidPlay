@@ -62,7 +62,7 @@ function Tweet() {
             </div>
             <div className=" mb-4">
               <p className=" lg:text-lg text-justify mb-2">{tweet?.content}</p>
-              <img src={tweet?.tweetImage} className="rounded-lg " />
+              <img src={tweet?.tweetImage} className="rounded-lg mx-auto" />
             </div>
             <Separator className="my-4" />
             <LikeButton tweet={tweet} />
