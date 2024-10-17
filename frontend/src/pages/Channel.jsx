@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { get, post } from "@/utils/api";
 import { useToast } from "@/hooks/use-toast";
 import { ScaleLoader } from "react-spinners";
+import { UserCheck, UserPlus } from "lucide-react";
 
 function Channel() {
   const { username } = useParams();
@@ -62,17 +63,16 @@ function Channel() {
             <div className="flex items-center justify-between space-x-4 mt-4 px-4">
               <div className="flex items-center gap-5">
                 <img
-                  className="w-20 h-20 rounded-full object-cover"
+                  className="lg:w-20 lg:h-20 w-12 h-12 rounded-full object-cover"
                   src={channel?.avatar}
                   alt="Avatar"
                 />
                 <div>
                   <h1 className="text-xl font-bold">{channel?.username}</h1>
-                  <div className="flex gap-2">
-                    <p className="text-gray-600">{channel?.fullname} |</p>
-                    <p className="text-gray-600">
-                      {channel?.subscribersCount} subscribers
-                    </p>
+                  <div className="flex gap-1 text-gray-600">
+                    <p>{channel?.fullname} </p>
+                    <p>|</p>
+                    <p>{channel?.subscribersCount} subscribers</p>
                   </div>
                 </div>
               </div>
@@ -86,11 +86,21 @@ function Channel() {
                 }}
                 className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base px-4 py-2 rounded-md"
               >
-                {authStatus
-                  ? subscribeStatus
-                    ? "Subscribed"
-                    : "Subscribe"
-                  : "Login to Subscribe"}
+                {authStatus ? (
+                  subscribeStatus ? (
+                    <>
+                      <p className=" lg:block hidden">Subscribed</p>
+                      <UserCheck className=" lg:hidden block" />
+                    </>
+                  ) : (
+                    <>
+                      <p className=" lg:block hidden">Subscribe</p>
+                      <UserPlus className=" lg:hidden block" />
+                    </>
+                  )
+                ) : (
+                  "Login to Subscribe"
+                )}
               </Button>
             </div>
           </div>

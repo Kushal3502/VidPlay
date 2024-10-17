@@ -18,6 +18,7 @@ import {
   ThumbsUp,
   Twitter,
   User,
+  UserCheck,
   Video,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +46,7 @@ function Navbar() {
   };
 
   return (
-    <div className="flex flex-wrap justify-between items-end lg:py-4 lg:px-12 md:p-3 p-2 space-x-4 border-b border-slate-500">
+    <div className="flex flex-wrap justify-between items-center lg:py-4 lg:px-12 md:p-3 p-2 space-x-4 border-b border-slate-500">
       <Link to={"/"}>
         <img
           src="/Logo-removebg-preview.png"
@@ -54,9 +55,9 @@ function Navbar() {
         />
       </Link>
       <Searchbox />
-      <div className="mt-4 lg:mt-0 flex justify-center items-center gap-4">
+      <div className="mt-4 lg:mt-0 flex items-center gap-4">
         {userData ? (
-          <p className=" hidden lg:block lg:text-lg">
+          <p className="hidden lg:block lg:text-lg">
             Welcome, {userData?.fullname.split(" ")[0]}
           </p>
         ) : (
@@ -108,6 +109,12 @@ function Navbar() {
               <DropdownMenuItem className="text-lg">
                 <Twitter className="mr-2 h-4 w-4" />
                 <span onClick={() => navigate("/tweets")}>Tweets</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-lg">
+                <UserCheck className="mr-2 h-4 w-4" />
+                <span onClick={() => navigate("/subscriptions")}>
+                  Subscriptions
+                </span>
               </DropdownMenuItem>
               <DropdownMenuItem className="text-lg">
                 <History className="mr-2 h-4 w-4" />

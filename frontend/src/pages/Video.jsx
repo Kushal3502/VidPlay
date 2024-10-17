@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Comment, LikeButton } from "@/components";
+import { Comment, LikeButton, VideoCard } from "@/components";
 import { Button } from "@/components/ui/button";
 import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { CirclePlus, ListPlus, Pencil, Trash2 } from "lucide-react";
+import {
+  CirclePlus,
+  ListPlus,
+  Pencil,
+  Rss,
+  Trash2,
+  User,
+  UserCheck,
+  UserPlus,
+} from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -22,12 +31,14 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { del, get, patch, post } from "@/utils/api";
 import { ScaleLoader } from "react-spinners";
+import { Separator } from "@/components/ui/separator";
 
 function Video() {
   const { videoId } = useParams();
   const [video, setVideo] = useState(null);
   const [playlist, setPlaylist] = useState([]);
   const [subscribeStatus, setSubscribeStatus] = useState(false);
+  const [suggestions, setSuggestions] = useState();
 
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -94,10 +105,17 @@ function Video() {
     });
   };
 
+  const fetchSuggestions = async (videoId) => {
+    const response = await get("/videos");
+    console.log(response);
+    setSuggestions(response.data.filter((item) => item._id != videoId));
+  };
+
   useEffect(() => {
     if (videoId) {
       fetchVideoDetails();
       fetchUserPlaylists();
+      fetchSuggestions(videoId);
     }
   }, [videoId]);
 
@@ -110,113 +128,141 @@ function Video() {
   return (
     <>
       {video ? (
-        <div className="w-full lg:max-w-5xl flex flex-col p-4 lg:px-8">
-          <div>
-            <div className="rounded-lg overflow-hidden">
-              <ReactPlayer
-                url={video?.videoFile}
-                controls={true}
-                width="100%"
-                height="100%"
-              />
-            </div>
-            <div className="w-full p-4">
-              <h1 className="lg:text-3xl sm:text-xl text-lg lg:mb-4 mb-2">
-                {video?.title}
-              </h1>
-              <div className="w-full flex flex-row justify-between items-center gap-4 lg:gap-0">
-                <div className="flex items-center gap-4">
-                  <Link
-                    to={`/users/channel/${video?.owner.username}`}
-                    className="flex items-center gap-4"
-                  >
-                    <img
-                      src={video?.owner?.avatar}
-                      className="lg:w-12 lg:h-12 sm:h-10 sm:w-10 w-8 h-8 rounded-full object-cover"
-                      alt="Avatar"
-                    />
-                    <p className="lg:text-xl text-lg font-medium">
-                      {video?.owner?.username}
-                    </p>
-                  </Link>
-                  <Button
-                    onClick={() => {
-                      if (user?.status) {
-                        toggleSubscription();
-                      } else {
-                        navigate("/auth/login");
-                      }
-                    }}
-                    className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base px-4 py-2 rounded-md"
-                  >
-                    {user?.status
-                      ? subscribeStatus
-                        ? "Subscribed"
-                        : "Subscribe"
-                      : "Login to Subscribe"}
-                  </Button>
-                  {user?.status && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
-                          <ListPlus />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
-                        <DropdownMenuLabel className="text-lg">
-                          Playlists
-                        </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {playlist && (
-                          <div>
+        <div className=" mx-auto p-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="w-full col-span-2">
+              <div className="rounded-lg overflow-hidden max-w-7xl">
+                <ReactPlayer
+                  url={video?.videoFile}
+                  controls={true}
+                  width="100%"
+                  height="100%"
+                />
+              </div>
+              <div className="mt-4">
+                <h1 className="lg:text-3xl sm:text-xl text-lg lg:mb-4 mb-2">
+                  {video?.title}
+                </h1>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    <Link
+                      to={`/users/channel/${video?.owner.username}`}
+                      className="flex items-center gap-4"
+                    >
+                      <img
+                        src={video?.owner?.avatar}
+                        className="lg:w-12 lg:h-12 sm:h-10 sm:w-10 w-8 h-8 rounded-full object-cover"
+                        alt="Avatar"
+                      />
+                      <p className="lg:text-xl text-lg font-medium">
+                        {video?.owner?.username}
+                      </p>
+                    </Link>
+                    <Button
+                      onClick={() => {
+                        if (user?.status) {
+                          toggleSubscription();
+                        } else {
+                          navigate("/auth/login");
+                        }
+                      }}
+                      className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base p-2 rounded-md"
+                    >
+                      {user?.status ? (
+                        subscribeStatus ? (
+                          <>
+                            <p className=" lg:block hidden">Subscribed</p>
+                            <UserCheck className=" lg:hidden block" />
+                          </>
+                        ) : (
+                          <>
+                            <p className=" lg:block hidden">Subscribe</p>
+                            <UserPlus className=" lg:hidden block" />
+                          </>
+                        )
+                      ) : (
+                        "Login to Subscribe"
+                      )}
+                    </Button>
+                    {user?.status && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
+                            <ListPlus />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
+                          <DropdownMenuLabel className="text-lg">
+                            Playlists
+                          </DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          {playlist && (
                             <div>
-                              {playlist.map((pl) => (
-                                <DropdownMenuItem
-                                  key={pl._id}
-                                  className="text-lg"
-                                  onClick={() => addVideoToPlaylist(pl._id)}
+                              <div>
+                                {playlist.map((pl) => (
+                                  <DropdownMenuItem
+                                    key={pl._id}
+                                    className="text-lg"
+                                    onClick={() => addVideoToPlaylist(pl._id)}
+                                  >
+                                    {pl.name}
+                                  </DropdownMenuItem>
+                                ))}
+                              </div>
+                              <DropdownMenuItem className="text-lg">
+                                <CirclePlus className="mr-2 h-4 w-4" />
+                                <span
+                                  onClick={() => navigate("/upload/playlist")}
                                 >
-                                  {pl.name}
-                                </DropdownMenuItem>
-                              ))}
+                                  Create new playlist
+                                </span>
+                              </DropdownMenuItem>
                             </div>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
+                  <div className="flex items-center lg:gap-3 gap-2 text-center">
+                    {user?.status &&
+                      user.userData._id === video?.owner?._id && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
+                              <Rss />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
                             <DropdownMenuItem className="text-lg">
-                              <CirclePlus className="mr-2 h-4 w-4" />
-                              <span
-                                onClick={() => navigate("/upload/playlist")}
-                              >
-                                Create new playlist
+                              <User className="mr-2 h-4 w-4" />
+                              <span onClick={() => navigate("/dashboard")}>
+                                View channel
                               </span>
                             </DropdownMenuItem>
-                          </div>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </div>
-                <div className="flex items-center lg:gap-3 gap-2 text-center">
-                  {user?.status && user.userData._id === video?.owner?._id && (
-                    <div className="flex gap-2">
-                      <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
-                        <Link to="/dashboard">View channel</Link>
-                      </Button>
-                      <Link to={`/edit/video/${videoId}`}>
-                        <Button className="bg-green-700 hover:bg-green-800 font-semibold text-sm lg:text-base px-2 sm:px-4 py-2 rounded-md">
-                          <Pencil />
-                        </Button>
-                      </Link>
-                      <Button
-                        className="bg-red-600 hover:bg-red-700 font-semibold px-2 sm:px-4 py-2 rounded-md"
-                        onClick={handleDeleteVideo}
-                      >
-                        <Trash2 />
-                      </Button>
-                    </div>
-                  )}
-                  <LikeButton video={video} />
+                            <DropdownMenuItem className="text-lg">
+                              <Pencil className="mr-2 h-4 w-4" />
+                              <span
+                                onClick={() =>
+                                  navigate(`/edit/video/${videoId}`)
+                                }
+                              >
+                                Edit
+                              </span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600 text-lg">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              <span onClick={handleDeleteVideo}>Delete</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
+                      <LikeButton video={video} />
+                    </Button>
+                  </div>
                 </div>
               </div>
-              <Accordion type="single" collapsible>
+              <Accordion type="single" collapsible className=" lg:hidden block">
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="lg:text-xl text-lg">
                     Description
@@ -226,9 +272,30 @@ function Video() {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
+              <Separator className="my-4 lg:block hidden" />
+              <div className=" col-span-2 mt-2">
+                <Comment videoId={videoId} />
+              </div>
             </div>
-            <div className="p-4">
-              <Comment videoId={videoId} />
+            <div className=" lg:block hidden p-2">
+              <Accordion type="single" collapsible defaultValue="item-1">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="lg:text-xl text-lg">
+                    Description
+                  </AccordionTrigger>
+                  <AccordionContent className="lg:text-lg text-justify">
+                    {video?.description}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+              <div className=" lg:p-8 p-2 mt-2">
+                <h2 className="lg:text-xl">Suggestions</h2>
+                {suggestions?.map((video) => (
+                  <div className=" my-4">
+                    <VideoCard video={video} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

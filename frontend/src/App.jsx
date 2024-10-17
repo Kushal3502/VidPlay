@@ -45,10 +45,11 @@ function App() {
     <div className="h-screen flex flex-col">
       <Navbar />
       <div className="flex flex-grow overflow-hidden">
+        {/* Sidebar - hidden on small screens, visible on larger screens */}
         <div className="fixed top-18 w-2/5 lg:w-[13%] border-r border-slate-500 p-4 h-[calc(100vh-4rem)] lg:block hidden">
           <ul className="space-y-4 h-full flex flex-col justify-between gap-4">
             <div>
-              <li className=" mb-2">
+              <li className="mb-2">
                 <NavLink
                   to={"/"}
                   className={({ isActive }) =>
@@ -63,7 +64,7 @@ function App() {
                   <span className="font-medium">Home</span>
                 </NavLink>
               </li>
-              <li className=" mb-2">
+              <li className="mb-2">
                 <NavLink
                   to={"/tweets"}
                   className={({ isActive }) =>
@@ -80,7 +81,7 @@ function App() {
               </li>
               {authStatus && (
                 <div>
-                  <li className=" mb-2">
+                  <li className="mb-2">
                     <NavLink
                       to={"/likes"}
                       className={({ isActive }) =>
@@ -95,7 +96,7 @@ function App() {
                       <span>Likes</span>
                     </NavLink>
                   </li>
-                  <li className=" mb-2">
+                  <li className="mb-2">
                     <NavLink
                       to={"/subscriptions"}
                       className={({ isActive }) =>
@@ -110,7 +111,7 @@ function App() {
                       <span>Subscriptions</span>
                     </NavLink>
                   </li>
-                  <li className=" mb-2">
+                  <li className="mb-2">
                     <NavLink
                       to={"/history"}
                       className={({ isActive }) =>
@@ -129,29 +130,34 @@ function App() {
               )}
             </div>
             <div>
-              <li className=" mb-2">
-                <NavLink
-                  to={"/dashboard"}
-                  className={({ isActive }) =>
-                    `flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl text-black ${
-                      isActive ? "bg-amber-600" : "bg-amber-500"
-                    } hover:bg-amber-600`
-                  }
-                >
-                  <User className="h-6 w-6" />
-                  <span className="font-medium">Profile</span>
-                </NavLink>
-              </li>
-              <li
-                className=" mb-2 flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl bg-red-600 hover:bg-red-700"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-6 w-6" />
-                <span>Log out</span>
-              </li>
+              {authStatus && (
+                <div>
+                  <li className="mb-2">
+                    <NavLink
+                      to={"/dashboard"}
+                      className={({ isActive }) =>
+                        `flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl text-black ${
+                          isActive ? "bg-amber-600" : "bg-amber-500"
+                        } hover:bg-amber-600`
+                      }
+                    >
+                      <User className="h-6 w-6" />
+                      <span className="font-medium">Profile</span>
+                    </NavLink>
+                  </li>
+                  <li
+                    className="mb-2 flex items-center justify-start gap-2 p-2 cursor-pointer rounded-md text-xl bg-red-600 hover:bg-red-700"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-6 w-6" />
+                    <span>Log out</span>
+                  </li>
+                </div>
+              )}
             </div>
           </ul>
         </div>
+        {/* Main content area */}
         <div className="lg:ml-[13%] w-full h-full flex-1 overflow-y-auto p-4">
           <Outlet />
         </div>

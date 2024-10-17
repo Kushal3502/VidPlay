@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
 import { ScaleLoader } from "react-spinners";
-import { del, get } from "@/utils/api";
+import { del, get, patch } from "@/utils/api";
 
 function Playlist() {
   const { playlistId } = useParams();
@@ -35,7 +35,7 @@ function Playlist() {
     setLoader(false);
   };
 
-  const handleDelete = async () => {
+  const handlePlaylistDelete = async () => {
     setLoader(true);
 
     await del(`/playlist/${playlistId}`);
@@ -44,7 +44,27 @@ function Playlist() {
     setLoader(false);
 
     toast({
-      description: "🗑️ Playlist deleted.",
+      description: "🔴Playlist deleted.",
+      className:
+        "bg-zinc-900 text-white font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+    });
+  };
+
+  const handleVideoDelete = async (videoId) => {
+    setLoader(true);
+
+    await patch(`/playlist/remove/${videoId}/${playlistId}`);
+
+    setPlaylist((prevPlaylist) => ({
+      ...prevPlaylist,
+      videos: prevPlaylist.videos.filter((video) => video._id !== videoId),
+    }));
+
+    navigate(`/playlist/${playlistId}`);
+    setLoader(false);
+
+    toast({
+      description: "🔴Video removed.",
       className:
         "bg-zinc-900 text-white font-semibold px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
     });
@@ -75,7 +95,7 @@ function Playlist() {
                     </Link>
                     <Button
                       className="bg-red-600 hover:bg-red-700 px-2 sm:px-4 py-2 rounded-md"
-                      onClick={handleDelete}
+                      onClick={handlePlaylistDelete}
                     >
                       <Trash2 />
                     </Button>
@@ -85,7 +105,7 @@ function Playlist() {
             </div>
             <Separator className="my-4" />
             <div className="mt-4">
-              <Accordion type="single" collapsible>
+              <Accordion type="single" collapsible defaultValue="item-1">
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="text-2xl">
                     Description
@@ -99,10 +119,23 @@ function Playlist() {
           </div>
           <div>
             {playlist && playlist.videos.length > 0 ? (
-              <div className="grid grid-cols-1 gap-8">
+              <div className="grid grid-cols-1 gap-2">
                 {playlist.videos.map((video) => (
-                  <div key={video._id} className="cursor-pointer">
-                    <VideoCard video={video} />
+                  <div
+                    key={video._id}
+                    className="flex items-start justify-between gap-4 p-4 rounded-md"
+                  >
+                    <div className="flex-grow cursor-pointer">
+                      <VideoCard video={video} />
+                    </div>
+                    {user.status && user.userData._id === playlist?.owner && (
+                      <Button
+                        className="bg-red-600 hover:bg-red-700 rounded-md p-2"
+                        onClick={() => handleVideoDelete(video._id)}
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
