@@ -9,7 +9,7 @@ function Tweets() {
 
   const fetchTweets = async () => {
     setLoader(true);
-    const response = await get("/tweets/");
+    const response = await get("/tweets/", {}, false);
     console.log(response);
     setTweets(response.data);
     setLoader(false);
