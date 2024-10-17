@@ -76,8 +76,8 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
     email,
     fullname,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    avatar: avatar.secure_url,
+    coverImage: coverImage?.secure_url || "",
     password,
   });
 
@@ -280,7 +280,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
   // upload new file
   const avatar = await uploadOnCloudinary(path);
 
-  if (!avatar.url) throw new ApiError(400, "Upload failed");
+  if (!avatar.secure_url) throw new ApiError(400, "Upload failed");
 
   // delete old image
   const userDetails = await User.findById(req.user?._id);
@@ -295,7 +295,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(
     req.user?._id,
     {
-      $set: { avatar: avatar.url },
+      $set: { avatar: avatar.secure_url },
     },
     { new: true }
   ).select("-password");
@@ -317,7 +317,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   // upload new file
   const coverImage = await uploadOnCloudinary(path);
 
-  if (!coverImage.url) throw new ApiError(400, "Upload failed");
+  if (!coverImage.secure_url) throw new ApiError(400, "Upload failed");
 
   // todo : delete old image
   const userDetails = await User.findById(req.user?._id);
@@ -332,7 +332,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(
     req.user?._id,
     {
-      $set: { coverImage: coverImage.url },
+      $set: { coverImage: coverImage.secure_url },
     },
     { new: true }
   ).select("-password");

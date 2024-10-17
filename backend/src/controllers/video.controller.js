@@ -88,8 +88,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
   // create new object
   const newVideo = await Video.create({
-    videoFile: videoFile.url,
-    thumbnail: thumbnail.url,
+    videoFile: videoFile.secure_url,
+    thumbnail: thumbnail.secure_url,
     owner: req.user?._id,
     title,
     description,
@@ -209,7 +209,7 @@ const updateVideo = asyncHandler(async (req, res) => {
       $set: {
         title,
         description,
-        thumbnail: newThumbnail?.url || video.thumbnail,
+        thumbnail: newThumbnail?.secure_url || video.thumbnail,
         views,
       },
     },

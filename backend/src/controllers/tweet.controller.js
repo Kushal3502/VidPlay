@@ -29,7 +29,7 @@ const createTweet = asyncHandler(async (req, res) => {
     }
 
     // Set tweetImage URL if upload succeeds
-    tweetImage = uploadedImage.url;
+    tweetImage = uploadedImage.secure_url;
   }
 
   const newTweet = await Tweet.create({
@@ -234,7 +234,7 @@ const updateTweet = asyncHandler(async (req, res) => {
     {
       $set: {
         content,
-        tweetImage: newTweetImage?.url || tweet.tweetImage,
+        tweetImage: newTweetImage?.secure_url || tweet.tweetImage,
       },
     },
     { new: true }
