@@ -3,17 +3,21 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 
-function Searchbox() {
+function Searchbox({ closeDialog }) {
   const [query, setQuery] = useState();
   const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
     navigate(`/search/?query=${query}`);
+    closeDialog();
   };
 
   return (
-    <form className="flex flex-wrap justify-center items-center gap-4 w-full lg:w-auto">
+    <form
+      className="flex flex-wrap justify-center items-center gap-4 w-full lg:w-auto"
+      onSubmit={handleSearch}
+    >
       <Input
         type="text"
         id="search"
@@ -24,7 +28,7 @@ function Searchbox() {
       <Button
         variant="destructive"
         className="w-full lg:w-auto bg-amber-500 hover:bg-amber-600 text-black font-semibold text-base"
-        onClick={handleSearch}
+        type="submit"
       >
         Search
       </Button>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,11 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   AtSign,
   CirclePlus,
   History,
   LogOut,
+  Search,
   ThumbsUp,
   Twitter,
   User,
@@ -32,6 +34,7 @@ function Navbar() {
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleLogout = async () => {
     const response = await post("/users/logout");
@@ -46,7 +49,7 @@ function Navbar() {
   };
 
   return (
-    <div className="flex flex-wrap justify-between items-center lg:py-4 lg:px-12 md:p-3 p-2 space-x-4 border-b border-slate-500">
+    <div className="flex flex-wrap justify-between items-end lg:py-4 lg:px-12 md:p-3 p-2 space-x-4 border-b border-slate-500">
       <Link to={"/"}>
         <img
           src="/Logo-removebg-preview.png"
@@ -54,7 +57,26 @@ function Navbar() {
           alt="Logo"
         />
       </Link>
-      <Searchbox />
+      <div className="lg:hidden block">
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              className="w-full lg:w-auto bg-zinc-900 border border-gray-500 font-semibold text-base"
+              onClick={() => setIsDialogOpen(true)}
+            >
+              <Search />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] bg-zinc-900">
+            <div className="grid gap-4 py-4">
+              <Searchbox closeDialog={() => setIsDialogOpen(false)} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <div className=" lg:block hidden">
+        <Searchbox />
+      </div>
       <div className="mt-4 lg:mt-0 flex items-center gap-4">
         {userData ? (
           <p className="hidden lg:block lg:text-lg">
