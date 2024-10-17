@@ -1,8 +1,10 @@
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 
+const url = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8000";
+
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/v1",
+  baseURL: url + "/api/v1",
 });
 
 export const get = async (endpoint, params = {}, auth = true) => {

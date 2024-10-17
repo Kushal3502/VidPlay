@@ -5,11 +5,14 @@ import { ScaleLoader } from "react-spinners";
 
 function Tweets() {
   const [tweets, setTweets] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const fetchTweets = async () => {
+    setLoader(true);
     const response = await get("/tweets/");
     console.log(response);
     setTweets(response.data);
+    setLoader(false);
   };
 
   useEffect(() => {
@@ -19,9 +22,9 @@ function Tweets() {
   return (
     <div className="p-4 sm:p-6 lg:px-10">
       <h2 className="lg:text-3xl mb-4">Popular tweets</h2>
-      {tweets ? (
+      {!loader ? (
         <div className="">
-          {tweets.length > 0 ? (
+          {tweets && tweets.length > 0 ? (
             <div className="grid lg:grid-cols-4 sm:grid-col-2 grid-col-1 gap-8">
               {tweets.map((tweet) => (
                 <div key={tweet._id} className=" cursor-pointer">

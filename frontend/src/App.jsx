@@ -45,7 +45,6 @@ function App() {
     <div className="h-screen flex flex-col">
       <Navbar />
       <div className="flex flex-grow overflow-hidden">
-        {/* Sidebar - hidden on small screens, visible on larger screens */}
         <div className="fixed top-18 w-2/5 lg:w-[13%] border-r border-slate-500 p-4 h-[calc(100vh-4rem)] lg:block hidden">
           <ul className="space-y-4 h-full flex flex-col justify-between gap-4">
             <div>
@@ -157,7 +156,6 @@ function App() {
             </div>
           </ul>
         </div>
-        {/* Main content area */}
         <div className="lg:ml-[13%] w-full h-full flex-1 overflow-y-auto p-4">
           <Outlet />
         </div>

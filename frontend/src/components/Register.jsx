@@ -31,7 +31,7 @@ function Register() {
     formData.append("coverImage", data.coverImage[0]);
 
     try {
-      const response = await post("/users/register", formData);
+      const response = await post("/users/register", formData, false);
 
       console.log(response);
 
