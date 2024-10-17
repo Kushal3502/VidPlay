@@ -91,6 +91,21 @@ function Video() {
     if (!video) return;
 
     await post(`/subscriptions/c/${video.owner._id}`);
+
+    if (subscribeStatus) {
+      toast({
+        description: "🔴Unsubscribed",
+        className:
+          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
+    } else {
+      toast({
+        description: "🟢Subscribed",
+        className:
+          "bg-zinc-900 text-white font-semibold text-xl px-6 py-3 rounded-lg shadow-lg border border-zinc-700 transition ease-in-out duration-300 transform hover:scale-105",
+      });
+    }
+
     setSubscribeStatus((prevStatus) => !prevStatus);
   };
 
@@ -185,42 +200,47 @@ function Video() {
                       )}
                     </Button>
                     {user?.status && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
-                            <ListPlus />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
-                          <DropdownMenuLabel className="text-lg">
-                            Playlists
-                          </DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          {playlist && (
-                            <div>
+                      <div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
+                              <ListPlus />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="m-4 border-gray-400 bg-[#18181B] text-white w-52">
+                            <DropdownMenuLabel className="text-lg">
+                              Playlists
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {playlist && (
                               <div>
-                                {playlist.map((pl) => (
-                                  <DropdownMenuItem
-                                    key={pl._id}
-                                    className="text-lg"
-                                    onClick={() => addVideoToPlaylist(pl._id)}
+                                <div>
+                                  {playlist.map((pl) => (
+                                    <DropdownMenuItem
+                                      key={pl._id}
+                                      className="text-lg"
+                                      onClick={() => addVideoToPlaylist(pl._id)}
+                                    >
+                                      {pl.name}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </div>
+                                <DropdownMenuItem className="text-lg">
+                                  <CirclePlus className="mr-2 h-4 w-4" />
+                                  <span
+                                    onClick={() => navigate("/upload/playlist")}
                                   >
-                                    {pl.name}
-                                  </DropdownMenuItem>
-                                ))}
+                                    Create new playlist
+                                  </span>
+                                </DropdownMenuItem>
                               </div>
-                              <DropdownMenuItem className="text-lg">
-                                <CirclePlus className="mr-2 h-4 w-4" />
-                                <span
-                                  onClick={() => navigate("/upload/playlist")}
-                                >
-                                  Create new playlist
-                                </span>
-                              </DropdownMenuItem>
-                            </div>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md ml-2">
+                          <LikeButton video={video} />
+                        </Button>
+                      </div>
                     )}
                   </div>
                   <div className="flex items-center lg:gap-3 gap-2 text-center">
@@ -256,9 +276,6 @@ function Video() {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       )}
-                    <Button className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-2 sm:px-4 py-2 rounded-md">
-                      <LikeButton video={video} />
-                    </Button>
                   </div>
                 </div>
               </div>
