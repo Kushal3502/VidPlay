@@ -44,7 +44,7 @@ function Tweet() {
                 />
                 <h2 className=" lg:text-xl">{tweet?.owner.username}</h2>
               </div>
-              {user && tweet?.owner._id == user.userData._id && (
+              {user?.userData?._id === tweet?.owner._id && (
                 <div className=" flex justify-center items-center gap-2">
                   <Link to={`/edit/tweet/${tweetId}`}>
                     <Button className="bg-green-700 hover:bg-green-800 font-semibold px-2 sm:px-4 py-2 rounded-md">
