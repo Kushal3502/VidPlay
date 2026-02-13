@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 const app = express();
 
@@ -18,6 +19,14 @@ app.use(express.urlencoded({ limit: "16kb", extended: true }));
 app.use(express.static("public"));
 
 app.use(cookieParser());
+
+app.use(morgan(":method :url :status - :response-time ms"));
+
+import cron from "node-cron";
+
+cron.schedule("*/10 * * * *", () => {
+  console.log("Running");
+});
 
 // routes
 import userRouter from "./routes/user.routes.js";
